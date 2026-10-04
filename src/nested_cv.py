@@ -22,6 +22,7 @@ import joblib
 import numpy as np
 import pandas as pd
 from sklearn.metrics import (
+    accuracy_score,
     average_precision_score,
     balanced_accuracy_score,
     brier_score_loss,
@@ -166,6 +167,7 @@ def evaluate_outer_fold(
     f1 = float(f1_score(y_test_arr, preds_at_thresh, zero_division=0))
     mcc = float(matthews_corrcoef(y_test_arr, preds_at_thresh))
     bal_acc = float(balanced_accuracy_score(y_test_arr, preds_at_thresh))
+    accuracy = float(accuracy_score(y_test_arr, preds_at_thresh))
 
     result = {
         "model_key": model_key,
@@ -176,7 +178,9 @@ def evaluate_outer_fold(
         "brier": brier,
         "f1": f1,
         "mcc": mcc,
+        "bal_acc": bal_acc,
         "balanced_accuracy": bal_acc,
+        "accuracy": accuracy,
         "optimal_threshold": opt_threshold,
         "best_params": best_params,
         "fit_time_s": float(fit_time_s),

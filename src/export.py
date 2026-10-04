@@ -49,21 +49,21 @@ class SchemaValidationError(Exception):
     pass
 
 
-def round_floats(obj: Any, decimals: int = 5) -> Any:
+def round_floats(obj: Any, decimals: int = 5, path: str = "root") -> Any:
     """Recursively round floating point values in data structures."""
     if isinstance(obj, float):
         if math.isnan(obj) or math.isinf(obj):
-            raise ValueError("NaN or Inf encountered in benchmark export data")
+            raise ValueError(f"NaN or Inf encountered in benchmark export data at {path}: {obj}")
         return round(obj, decimals)
     if isinstance(obj, dict):
-        return {k: round_floats(v, decimals) for k, v in obj.items()}
+        return {k: round_floats(v, decimals, f"{path}.{k}") for k, v in obj.items()}
     if isinstance(obj, list):
-        return [round_floats(v, decimals) for v in obj]
+        return [round_floats(v, decimals, f"{path}[{i}]") for i, v in enumerate(obj)]
     if isinstance(obj, tuple):
-        return [round_floats(v, decimals) for v in obj]
+        return [round_floats(v, decimals, f"{path}[{i}]") for i, v in enumerate(obj)]
     if isinstance(obj, np.generic):
         py_val = obj.item()
-        return round_floats(py_val, decimals)
+        return round_floats(py_val, decimals, path)
     return obj
 
 
@@ -217,7 +217,20 @@ def assemble_results(
         if not cv_scores and folds:
             # Construct from folds list
             metric_keys = ["pr_auc", "roc_auc", "f1", "mcc", "bal_acc", "brier", "accuracy"]
-            cv_scores = {k: [float(f[k]) for f in folds if k in f] for k in metric_keys}
+            cv_scores = {}
+            for k in metric_keys:
+                scores_k = []
+                for f in folds:
+                    if k in f:
+                        scores_k.append(float(f[k]))
+                    elif k == "bal_acc" and "balanced_accuracy" in f:
+                        scores_k.append(float(f["balanced_accuracy"]))
+                    elif k == "accuracy" and "y_true" in f and "y_proba" in f:
+                        y_t = np.asarray(f["y_true"], dtype=int)
+                        y_p = np.asarray(f["y_proba"], dtype=float)
+                        t_opt = float(f.get("optimal_threshold", 0.5))
+                        scores_k.append(float(np.mean((y_p >= t_opt).astype(int) == y_t)))
+                cv_scores[k] = scores_k
 
         cv_summary = {}
         for metric, scores in cv_scores.items():
@@ -248,15 +261,46 @@ def assemble_results(
         else:
             perm_list = []
 
+        # Format ROC: schema requires list of [fpr, tpr] pairs
+        raw_roc = m_raw.get("roc", m_raw.get("curves", {}).get("roc", []))
+        formatted_roc = []
+        for pt in raw_roc:
+            if isinstance(pt, dict):
+                formatted_roc.append([float(pt.get("fpr", 0.0)), float(pt.get("tpr", 0.0))])
+            elif isinstance(pt, (list, tuple)) and len(pt) >= 2:
+                formatted_roc.append([float(pt[0]), float(pt[1])])
+
+        # Format PR: schema requires list of [recall, precision] pairs
+        raw_pr = m_raw.get("pr", m_raw.get("curves", {}).get("pr", []))
+        formatted_pr = []
+        for pt in raw_pr:
+            if isinstance(pt, dict):
+                formatted_pr.append([float(pt.get("recall", 0.0)), float(pt.get("precision", 0.0))])
+            elif isinstance(pt, (list, tuple)) and len(pt) >= 2:
+                formatted_pr.append([float(pt[0]), float(pt[1])])
+
+        # Format thresholds: ensure 't', 'tp', 'fp', 'tn', 'fn'
+        raw_thresholds = m_raw.get("thresholds", m_raw.get("threshold_table", []))
+        formatted_thresholds = []
+        for r in raw_thresholds:
+            t_val = r.get("t", r.get("threshold", 0.0))
+            formatted_thresholds.append({
+                "t": float(round(float(t_val), 4)),
+                "tp": float(r["tp"]),
+                "fp": float(r["fp"]),
+                "tn": float(r["tn"]),
+                "fn": float(r["fn"]),
+            })
+
         formatted_models[m] = {
             "label": labels.get(m, m.upper()),
             "best_params": best_params,
             "best_params_frequency": freq_list,
             "cv_scores": cv_scores,
             "cv_summary": cv_summary,
-            "thresholds": m_raw.get("thresholds", m_raw.get("threshold_table", [])),
-            "roc": m_raw.get("roc", m_raw.get("curves", {}).get("roc", [])),
-            "pr": m_raw.get("pr", m_raw.get("curves", {}).get("pr", [])),
+            "thresholds": formatted_thresholds,
+            "roc": formatted_roc,
+            "pr": formatted_pr,
             "calibration": m_raw.get("calibration", []),
             "timing": m_raw.get("timing", {"train_s": 0.0, "infer_ms_per_1k": 0.0, "model_kb": 0.0}),
             "importance": {"permutation": perm_list},

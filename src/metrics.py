@@ -250,8 +250,10 @@ def build_threshold_table(
             mean_tp, mean_fp, mean_tn, mean_fn, cost_ratio=cost_ratio
         )
 
+        t_val = float(round(float(t), 4))
         entry = {
-            "threshold": float(round(float(t), 4)),
+            "t": t_val,
+            "threshold": t_val,
             "tp": float(round(mean_tp, 2)),
             "fp": float(round(mean_fp, 2)),
             "tn": float(round(mean_tn, 2)),
@@ -338,7 +340,7 @@ def build_roc_pr(
         {
             "fpr": float(round(float(fpr[i]), 5)),
             "tpr": float(round(float(tpr[i]), 5)),
-            "threshold": float(round(float(roc_thresholds[i]), 5)),
+            "threshold": 1.0 if np.isinf(roc_thresholds[i]) else float(round(float(roc_thresholds[i]), 5)),
         }
         for i in roc_idx
     ]

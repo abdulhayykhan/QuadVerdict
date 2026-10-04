@@ -28,9 +28,18 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.utils.metaestimators import available_if
 
 from src.config import SEED, SVM_MAX_TRAIN
 from src.data import CATEGORICAL_FEATURES, NUMERIC_FEATURES
+
+
+def _estimator_has(attr: str):
+    def check(self: Any) -> bool:
+        if hasattr(self, "estimator_"):
+            return hasattr(self.estimator_, attr)
+        return hasattr(self.estimator, attr)
+    return check
 
 
 class StratifiedSubsampleClassifier(ClassifierMixin, BaseEstimator):
@@ -118,19 +127,19 @@ class StratifiedSubsampleClassifier(ClassifierMixin, BaseEstimator):
             raise ValueError("This StratifiedSubsampleClassifier instance is not fitted yet.")
         return self.estimator_.predict(X)
 
+    @available_if(_estimator_has("predict_proba"))
     def predict_proba(self, X: Any) -> np.ndarray:
         """Predict class probabilities for X using the fitted base estimator."""
         if not hasattr(self, "estimator_"):
             raise ValueError("This StratifiedSubsampleClassifier instance is not fitted yet.")
         return self.estimator_.predict_proba(X)
 
+    @available_if(_estimator_has("decision_function"))
     def decision_function(self, X: Any) -> np.ndarray:
         """Decision function for X if supported by the base estimator."""
         if not hasattr(self, "estimator_"):
             raise ValueError("This StratifiedSubsampleClassifier instance is not fitted yet.")
-        if hasattr(self.estimator_, "decision_function"):
-            return self.estimator_.decision_function(X)
-        raise AttributeError(f"{type(self.estimator_).__name__} has no decision_function.")
+        return self.estimator_.decision_function(X)
 
 
 def build_preprocessor(model_key: str) -> ColumnTransformer:

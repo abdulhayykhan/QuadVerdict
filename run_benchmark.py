@@ -70,15 +70,14 @@ def main() -> int:
     from src.pipelines import build_pipeline
 
     seed = args.seed if args.seed is not None else config.SEED
-    is_quick = args.quick or (not args.full)  # Default to quick unless --full is explicitly passed
+    is_quick = args.quick and not args.full
 
     print("=" * 60)
     print("QuadVerdict Benchmark")
     print("=" * 60)
     if is_quick:
         print("[WARNING] Running in QUICK mode (smoke test budget).")
-        if not args.quick and not args.full:
-            print("          Pass --full to run the multi-hour 15-fold publication benchmark.")
+        print("          Output is marked meta.quick=true (not for publication).")
     else:
         print("[INFO] Running in FULL publication mode (15 folds, full budget).")
 
@@ -313,16 +312,23 @@ def main() -> int:
                 "holdout": holdout_payload[m],
             }
 
+        # In quick mode, CV was run on a subsample of development data; derive exact n, n_pos, n_neg
+        first_thresh = next(iter(metrics_payload.values()))["threshold_table"][0]
+        n_pos_cv = int(round(first_thresh["tp"] + first_thresh["fn"]))
+        n_neg_cv = int(round(first_thresh["fp"] + first_thresh["tn"]))
+        n_cv = n_pos_cv + n_neg_cv
+        pos_rate_cv = float(n_pos_cv / n_cv) if n_cv > 0 else 0.0
+
         meta_info = {
-            "n": len(X_dev),
-            "n_pos": int((y_dev == 1).sum()),
-            "n_neg": int((y_dev == 0).sum()),
-            "pos_rate": float((y_dev == 1).mean()),
+            "n": n_cv,
+            "n_pos": n_pos_cv,
+            "n_neg": n_neg_cv,
+            "pos_rate": pos_rate_cv,
             "seed": seed,
             "outer_splits": cv_output["meta"]["n_splits"],
             "outer_repeats": cv_output["meta"]["n_repeats"],
-            "inner_splits": cv_output["meta"]["inner_splits"],
-            "n_iter": cv_output["meta"]["n_iter"],
+            "inner_splits": cv_output["meta"].get("inner_splits", config.INNER_N_SPLITS),
+            "n_iter": cv_output["meta"].get("n_iter", config.QUICK_N_ITER if is_quick else config.N_ITER),
             "quick": is_quick,
         }
 
