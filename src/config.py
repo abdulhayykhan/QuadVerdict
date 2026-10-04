@@ -35,7 +35,7 @@ MOCK_JSON: Path = WEB_DIR / "mock_results.json"
 # ---------------------------------------------------------------------------
 # UCI Default of Credit Card Clients
 # Expected filename inside DATA_RAW_DIR:
-DATA_FILENAME: str = "default_of_credit_card_clients.csv"
+DATA_FILENAME: str = "UCI_Credit_Card.csv"
 DATA_PATH: Path = DATA_RAW_DIR / DATA_FILENAME
 
 # ---------------------------------------------------------------------------
