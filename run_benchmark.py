@@ -139,10 +139,69 @@ def main() -> int:
         print("\n" + cv_summary.to_string(index=False) + "\n")
 
     # -----------------------------------------------------------------------
-    # Phase 4 to 10 stubs (to be wired in subsequent phases)
+    # Phase 4: Aggregate metrics (Threshold tables, ROC/PR curves, Calibration)
     # -----------------------------------------------------------------------
-    print("[Phase 4/10] Aggregate metrics ... (implemented in Phase 4)")
-    print("[Phase 5/10] Significance tests ... (implemented in Phase 4)")
+    print("[Phase 4/10] Aggregate metrics ...")
+    if args.dry_run:
+        print("             Dry run mode: skipped metrics aggregation.")
+    else:
+        from src.metrics import (
+            build_calibration,
+            build_roc_pr,
+            build_threshold_table,
+            extract_repeat_predictions,
+        )
+
+        n_splits = cv_output["meta"]["n_splits"]
+        n_repeats = cv_output["meta"]["n_repeats"]
+
+        metrics_payload = {}
+        for m in config.MODEL_KEYS:
+            folds_m = cv_output["models"][m]
+            table = build_threshold_table(
+                folds_m, n_splits=n_splits, n_repeats=n_repeats, n_steps=config.N_THRESHOLD_STEPS
+            )
+            y_t0, y_p0 = extract_repeat_predictions(folds_m, repeat_idx=0)
+            curves = build_roc_pr(y_t0, y_p0, max_points=200)
+            cal_bins = build_calibration(y_t0, y_p0, n_bins=10)
+
+            metrics_payload[m] = {
+                "threshold_table": table,
+                "curves": curves,
+                "calibration": cal_bins,
+            }
+        print(f"             Aggregated threshold tables (101 steps), ROC/PR curves, and calibration bins for {len(metrics_payload)} models.")
+
+    # -----------------------------------------------------------------------
+    # Phase 5: Significance tests
+    # -----------------------------------------------------------------------
+    print("[Phase 5/10] Significance tests ...")
+    if args.dry_run:
+        print("             Dry run mode: skipped significance testing.")
+    else:
+        from src.significance import run_pairwise_significance
+
+        n_samples = cv_output["meta"]["n_samples"]
+        n_test = n_samples // cv_output["meta"]["n_splits"]
+        n_train = n_samples - n_test
+
+        pairwise_results = run_pairwise_significance(
+            cv_output=cv_output,
+            n_train=n_train,
+            n_test=n_test,
+            metric="pr_auc",
+        )
+        print(f"             Computed {len(pairwise_results)} pairwise comparisons (Nadeau-Bengio + Wilcoxon + Holm):")
+        for pair in pairwise_results:
+            sig_flag = "SIGNIFICANT" if pair["significant"] else "not significant"
+            print(
+                f"               {pair['model_a'].upper()} vs {pair['model_b'].upper()}: "
+                f"diff = {pair['mean_diff']:+.4f}, t = {pair['t_stat']:.3f}, p_adj = {pair['p_adj_nb']:.4f} ({sig_flag})"
+            )
+
+    # -----------------------------------------------------------------------
+    # Phase 6 to 10 stubs (to be wired in subsequent phases)
+    # -----------------------------------------------------------------------
     print("[Phase 6/10] Permutation importance ... (implemented in Phase 5)")
     print("[Phase 7/10] Imbalance experiment + learning curves ... (implemented in Phase 5)")
     print("[Phase 8/10] Timing ... (implemented in Phase 5)")
