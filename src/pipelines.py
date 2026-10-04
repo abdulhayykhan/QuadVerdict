@@ -33,7 +33,7 @@ from src.config import SEED, SVM_MAX_TRAIN
 from src.data import CATEGORICAL_FEATURES, NUMERIC_FEATURES
 
 
-class StratifiedSubsampleClassifier(BaseEstimator, ClassifierMixin):
+class StratifiedSubsampleClassifier(ClassifierMixin, BaseEstimator):
     """Sklearn-compatible wrapper that takes a stratified subsample of training data.
 
     Enforces runtime bounds for quadratic/cubic algorithms like kernel SVC
@@ -49,6 +49,8 @@ class StratifiedSubsampleClassifier(BaseEstimator, ClassifierMixin):
     random_state : int, default=SEED (42)
         Seed for deterministic stratified subsampling.
     """
+
+    _estimator_type = "classifier"
 
     def __init__(
         self,
@@ -267,10 +269,10 @@ def get_param_distributions(model_key: str) -> dict[str, Any]:
         Mapping of pipeline parameter names to candidate values or distributions.
     """
     if model_key == "lr":
-        # TRD §4.2: C in loguniform(1e-3, 1e2); penalty in {l1, l2}
+        # TRD §4.2: C in loguniform(1e-3, 1e2); l1_ratio covers L2 (0.0), L1 (1.0), and ElasticNet (0 < r < 1)
         return {
             "classifier__C": loguniform(1e-3, 1e2),
-            "classifier__penalty": ["l1", "l2"],
+            "classifier__l1_ratio": [0.0, 0.2, 0.5, 0.8, 1.0],
         }
     elif model_key == "dt":
         # TRD §4.2: max_depth in {3..20, None}; min_samples_leaf in {1..50}; ccp_alpha

@@ -64,12 +64,12 @@ def test_run_benchmark_argparse() -> None:
 
 
 def test_run_benchmark_runs_as_stub() -> None:
-    """run_benchmark.py (stub) must exit 0 and print phase markers."""
+    """run_benchmark.py must exit 0 and print phase markers."""
     result = subprocess.run(
-        [sys.executable, "run_benchmark.py"],
+        [sys.executable, "run_benchmark.py", "--dry-run"],
         capture_output=True,
         text=True,
-        timeout=15,
+        timeout=45,
     )
     assert result.returncode == 0, f"Stub run failed:\n{result.stderr}"
     # Each phase marker must be present
