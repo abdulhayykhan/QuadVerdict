@@ -80,6 +80,7 @@ SVM_MAX_TRAIN: int = 8_000
 # ---------------------------------------------------------------------------
 # Default FN:FP cost ratio shown on first load (slider covers 1–50).
 DEFAULT_COST_RATIO: int = 5
+COST_RATIO_DEFAULT: int = DEFAULT_COST_RATIO
 
 # ---------------------------------------------------------------------------
 # Threshold table

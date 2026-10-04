@@ -271,10 +271,73 @@ def main() -> int:
             print(f"               {m.upper()}: train = {t_info['train_s']:.2f}s | infer = {t_info['infer_ms_per_1k']:.2f} ms/1k | size = {t_info['model_kb']:.1f} KB")
 
     # -----------------------------------------------------------------------
-    # Phase 9 and 10 stubs (to be wired in Phase 6)
+    # Phase 9: Hold-out sanity check (TRD §4.9)
     # -----------------------------------------------------------------------
-    print("[Phase 9/10] Hold-out sanity check ... (implemented in Phase 6)")
-    print("[Phase 10/10] Export and validate ... (implemented in Phase 6)")
+    print("[Phase 9/10] Hold-out sanity check ...")
+    if args.dry_run:
+        print("             Dry run mode: skipped hold-out evaluation.")
+    else:
+        from src.export import evaluate_holdout_set
+
+        holdout_payload = evaluate_holdout_set(
+            models=config.MODEL_KEYS,
+            cv_output=cv_output,
+            X_dev=X_dev,
+            y_dev=y_dev,
+            X_hold=X_hold,
+            y_hold=y_hold,
+            seed=seed,
+        )
+        for m, h_scores in holdout_payload.items():
+            print(f"             {m.upper()} Hold-out: PR-AUC = {h_scores['pr_auc']:.4f}, ROC-AUC = {h_scores['roc_auc']:.4f}")
+
+    # -----------------------------------------------------------------------
+    # Phase 10: Export and validate (TRD §5)
+    # -----------------------------------------------------------------------
+    print("[Phase 10/10] Export and validate ...")
+    if args.dry_run:
+        print("             Dry run mode: skipped export and schema validation.")
+    else:
+        from src.export import assemble_results, validate, write
+
+        models_data = {}
+        for m in config.MODEL_KEYS:
+            models_data[m] = {
+                "folds": cv_output["models"][m],
+                "thresholds": metrics_payload[m]["threshold_table"],
+                "roc": metrics_payload[m]["curves"]["roc"],
+                "pr": metrics_payload[m]["curves"]["pr"],
+                "calibration": metrics_payload[m]["calibration"],
+                "timing": timing_payload["models"][m],
+                "importance": importance_payload[m],
+                "holdout": holdout_payload[m],
+            }
+
+        meta_info = {
+            "n": len(X_dev),
+            "n_pos": int((y_dev == 1).sum()),
+            "n_neg": int((y_dev == 0).sum()),
+            "pos_rate": float((y_dev == 1).mean()),
+            "seed": seed,
+            "outer_splits": cv_output["meta"]["n_splits"],
+            "outer_repeats": cv_output["meta"]["n_repeats"],
+            "inner_splits": cv_output["meta"]["inner_splits"],
+            "n_iter": cv_output["meta"]["n_iter"],
+            "quick": is_quick,
+        }
+
+        results_payload = assemble_results(
+            meta_info=meta_info,
+            models_data=models_data,
+            imbalance_exp=imb_results,
+            significance_data=pairwise_results,
+            learning_curves_data=curves_results,
+        )
+
+        validate(results_payload, schema_path=config.RESULTS_DIR / "schema.json")
+        out_file = config.RESULTS_DIR / "results.json"
+        bytes_written = write(results_payload, out_file, minified=True)
+        print(f"             Validated against schema.json and exported {bytes_written / 1024.0:.1f} KB to {out_file}")
 
     elapsed = time.perf_counter() - t_start
     print()

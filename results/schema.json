@@ -1,0 +1,317 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "QuadVerdictResults",
+  "description": "Schema definition and data contract for QuadVerdict benchmark results (TRD §5).",
+  "type": "object",
+  "required": [
+    "meta",
+    "models",
+    "imbalance_experiment",
+    "significance",
+    "learning_curves"
+  ],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": [
+        "project",
+        "dataset",
+        "n",
+        "n_pos",
+        "n_neg",
+        "pos_rate",
+        "seed",
+        "outer_cv",
+        "inner_cv",
+        "n_iter",
+        "svm_max_train",
+        "default_cost_ratio",
+        "primary_metric",
+        "quick",
+        "versions",
+        "hardware",
+        "built_at"
+      ],
+      "properties": {
+        "project": { "type": "string" },
+        "dataset": { "type": "string" },
+        "n": { "type": "integer", "minimum": 1 },
+        "n_pos": { "type": "integer", "minimum": 1 },
+        "n_neg": { "type": "integer", "minimum": 1 },
+        "pos_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "seed": { "type": "integer" },
+        "outer_cv": {
+          "type": "object",
+          "required": ["type", "n_splits", "n_repeats"],
+          "properties": {
+            "type": { "type": "string" },
+            "n_splits": { "type": "integer", "minimum": 2 },
+            "n_repeats": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "inner_cv": {
+          "type": "object",
+          "required": ["type", "n_splits"],
+          "properties": {
+            "type": { "type": "string" },
+            "n_splits": { "type": "integer", "minimum": 2 }
+          }
+        },
+        "n_iter": {
+          "type": "object",
+          "required": ["lr", "dt", "rf", "svm"],
+          "properties": {
+            "lr": { "type": "integer", "minimum": 1 },
+            "dt": { "type": "integer", "minimum": 1 },
+            "rf": { "type": "integer", "minimum": 1 },
+            "svm": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "svm_max_train": { "type": "integer", "minimum": 100 },
+        "default_cost_ratio": { "type": "number", "minimum": 1 },
+        "primary_metric": { "type": "string" },
+        "quick": { "type": "boolean" },
+        "versions": {
+          "type": "object",
+          "required": ["python", "sklearn", "imblearn", "numpy", "pandas", "scipy"],
+          "properties": {
+            "python": { "type": "string" },
+            "sklearn": { "type": "string" },
+            "imblearn": { "type": "string" },
+            "numpy": { "type": "string" },
+            "pandas": { "type": "string" },
+            "scipy": { "type": "string" }
+          }
+        },
+        "hardware": {
+          "type": "object",
+          "required": ["cpu", "cores"],
+          "properties": {
+            "cpu": { "type": "string" },
+            "cores": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "built_at": { "type": "string" }
+      }
+    },
+    "models": {
+      "type": "object",
+      "required": ["lr", "dt", "rf", "svm"],
+      "patternProperties": {
+        "^[a-z_]+$": {
+          "type": "object",
+          "required": [
+            "label",
+            "best_params",
+            "best_params_frequency",
+            "cv_scores",
+            "cv_summary",
+            "thresholds",
+            "roc",
+            "pr",
+            "calibration",
+            "timing",
+            "importance",
+            "holdout"
+          ],
+          "properties": {
+            "label": { "type": "string" },
+            "best_params": { "type": "object" },
+            "best_params_frequency": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["params", "count"],
+                "properties": {
+                  "params": { "type": "object" },
+                  "count": { "type": "integer", "minimum": 1 }
+                }
+              }
+            },
+            "cv_scores": {
+              "type": "object",
+              "required": ["pr_auc", "roc_auc", "f1", "mcc", "bal_acc", "brier", "accuracy"],
+              "properties": {
+                "pr_auc": { "type": "array", "items": { "type": "number", "minimum": 0, "maximum": 1 } },
+                "roc_auc": { "type": "array", "items": { "type": "number", "minimum": 0, "maximum": 1 } },
+                "f1": { "type": "array", "items": { "type": "number", "minimum": 0, "maximum": 1 } },
+                "mcc": { "type": "array", "items": { "type": "number", "minimum": -1, "maximum": 1 } },
+                "bal_acc": { "type": "array", "items": { "type": "number", "minimum": 0, "maximum": 1 } },
+                "brier": { "type": "array", "items": { "type": "number", "minimum": 0, "maximum": 1 } },
+                "accuracy": { "type": "array", "items": { "type": "number", "minimum": 0, "maximum": 1 } }
+              }
+            },
+            "cv_summary": {
+              "type": "object",
+              "required": ["pr_auc", "roc_auc", "f1", "mcc", "bal_acc", "brier", "accuracy"],
+              "patternProperties": {
+                "^[a-z_]+$": {
+                  "type": "object",
+                  "required": ["mean", "std", "ci95"],
+                  "properties": {
+                    "mean": { "type": "number" },
+                    "std": { "type": "number", "minimum": 0 },
+                    "ci95": {
+                      "type": "array",
+                      "minItems": 2,
+                      "maxItems": 2,
+                      "items": { "type": "number" }
+                    }
+                  }
+                }
+              }
+            },
+            "thresholds": {
+              "type": "array",
+              "minItems": 101,
+              "maxItems": 101,
+              "items": {
+                "type": "object",
+                "required": ["t", "tp", "fp", "tn", "fn"],
+                "properties": {
+                  "t": { "type": "number", "minimum": 0, "maximum": 1 },
+                  "tp": { "type": "number", "minimum": 0 },
+                  "fp": { "type": "number", "minimum": 0 },
+                  "tn": { "type": "number", "minimum": 0 },
+                  "fn": { "type": "number", "minimum": 0 }
+                }
+              }
+            },
+            "roc": {
+              "type": "array",
+              "maxItems": 200,
+              "items": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": { "type": "number", "minimum": 0, "maximum": 1 }
+              }
+            },
+            "pr": {
+              "type": "array",
+              "maxItems": 200,
+              "items": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": { "type": "number", "minimum": 0, "maximum": 1 }
+              }
+            },
+            "calibration": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "required": ["mean_pred", "frac_pos", "n"],
+                "properties": {
+                  "mean_pred": { "type": "number", "minimum": 0, "maximum": 1 },
+                  "frac_pos": { "type": "number", "minimum": 0, "maximum": 1 },
+                  "n": { "type": "integer", "minimum": 0 }
+                }
+              }
+            },
+            "timing": {
+              "type": "object",
+              "required": ["train_s", "infer_ms_per_1k", "model_kb"],
+              "properties": {
+                "train_s": { "type": "number", "minimum": 0 },
+                "infer_ms_per_1k": { "type": "number", "minimum": 0 },
+                "model_kb": { "type": "number", "minimum": 0 }
+              }
+            },
+            "importance": {
+              "type": "object",
+              "required": ["permutation"],
+              "properties": {
+                "permutation": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["feature", "mean", "std"],
+                    "properties": {
+                      "feature": { "type": "string" },
+                      "mean": { "type": "number" },
+                      "std": { "type": "number", "minimum": 0 }
+                    }
+                  }
+                }
+              }
+            },
+            "holdout": {
+              "type": "object",
+              "required": ["pr_auc", "roc_auc"],
+              "properties": {
+                "pr_auc": { "type": "number", "minimum": 0, "maximum": 1 },
+                "roc_auc": { "type": "number", "minimum": 0, "maximum": 1 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "imbalance_experiment": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["model", "strategy", "pr_auc_mean", "pr_auc_std"],
+        "properties": {
+          "model": { "type": "string" },
+          "strategy": { "type": "string", "enum": ["none", "balanced", "smote"] },
+          "pr_auc_mean": { "type": "number", "minimum": 0, "maximum": 1 },
+          "pr_auc_std": { "type": "number", "minimum": 0 }
+        }
+      }
+    },
+    "significance": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": ["a", "b", "metric", "mean_diff", "nadeau_bengio", "wilcoxon"],
+        "properties": {
+          "a": { "type": "string" },
+          "b": { "type": "string" },
+          "metric": { "type": "string" },
+          "mean_diff": { "type": "number" },
+          "nadeau_bengio": {
+            "type": "object",
+            "required": ["t", "p", "p_adj"],
+            "properties": {
+              "t": { "type": "number" },
+              "p": { "type": "number", "minimum": 0, "maximum": 1 },
+              "p_adj": { "type": "number", "minimum": 0, "maximum": 1 }
+            }
+          },
+          "wilcoxon": {
+            "type": "object",
+            "required": ["stat", "p", "p_adj"],
+            "properties": {
+              "stat": { "type": "number", "minimum": 0 },
+              "p": { "type": "number", "minimum": 0, "maximum": 1 },
+              "p_adj": { "type": "number", "minimum": 0, "maximum": 1 }
+            }
+          }
+        }
+      }
+    },
+    "learning_curves": {
+      "type": "object",
+      "required": ["lr", "dt", "rf", "svm"],
+      "patternProperties": {
+        "^[a-z_]+$": {
+          "type": "object",
+          "required": ["sizes", "train", "val", "train_std", "val_std"],
+          "properties": {
+            "sizes": { "type": "array", "items": { "type": "integer" } },
+            "train": { "type": "array", "items": { "type": "number", "minimum": 0, "maximum": 1 } },
+            "val": { "type": "array", "items": { "type": "number", "minimum": 0, "maximum": 1 } },
+            "train_std": { "type": "array", "items": { "type": "number", "minimum": 0 } },
+            "val_std": { "type": "array", "items": { "type": "number", "minimum": 0 } }
+          }
+        }
+      }
+    }
+  }
+}
