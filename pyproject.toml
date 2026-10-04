@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "quadverdict"
+version = "0.1.0"
+description = "Cost-sensitive benchmark of four classifiers on the UCI credit-default dataset"
+requires-python = ">=3.11"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+# ---------------------------------------------------------------------------
+# pytest
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
+# Exit 0 when no tests are collected (stubs pass vacuously during skeleton phase)
+empty_parameter_set_mark = "skip"
+# Avoid polluting the working directory with pytest cache
+cache_dir = ".pytest_cache"
+
+# ---------------------------------------------------------------------------
+# ruff (linter + formatter)
+# ---------------------------------------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+# E/W: pycodestyle, F: pyflakes, I: isort, B: flake8-bugbear, UP: pyupgrade
+select = ["E", "W", "F", "I", "B", "UP"]
+ignore = [
+    "E501",  # line too long — handled by formatter
+    "B008",  # do not perform function call in default argument
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests can use assert statements freely and have longer lines
+"tests/*" = ["S101", "E501"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

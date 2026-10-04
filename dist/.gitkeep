@@ -1,0 +1,4 @@
+# dist/ — generated output directory.
+# NEVER edit files here by hand.
+# Produced by: python web/build_site.py
+# Committed so Vercel can serve it directly (no build command needed).

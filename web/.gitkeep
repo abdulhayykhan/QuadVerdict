@@ -1,0 +1,4 @@
+# web/ — frontend source.
+# index.html      ← SOURCE template (editable)
+# mock_results.json ← hand-made schema-valid data for UI development
+# build_site.py   ← injects results.json into index.html → dist/

@@ -1,0 +1,37 @@
+# QuadVerdict — Python dependencies
+# Python: 3.11.x or 3.12.x
+# Captured with: pip freeze | grep -E "^(scikit|imbalanced|pandas|numpy|scipy|jsonschema|pytest|ruff|jupyter|nbstripout|joblib|notebook|ipykernel)"
+# Run `pip install -r requirements.txt` from a fresh venv.
+#
+# IMPORTANT: Results can shift between scikit-learn and imbalanced-learn releases.
+# Do not upgrade these without re-running the full benchmark and verifying reproducibility.
+
+# --- Core ML ---
+scikit-learn==1.5.2
+imbalanced-learn==0.12.4
+
+# --- Data ---
+pandas==2.2.3
+numpy==1.26.4
+
+# --- Stats ---
+scipy==1.13.1
+
+# --- Schema validation ---
+jsonschema==4.23.0
+
+# --- Parallelism (also a sklearn dep, pinned for reproducibility) ---
+joblib==1.4.2
+
+# --- Testing & linting ---
+pytest==8.3.3
+ruff==0.6.9
+
+# --- Notebooks ---
+jupyter==1.1.1
+notebook==7.2.2
+ipykernel==6.29.5
+nbstripout==0.7.1
+
+# --- Transitive pins that affect numerics ---
+threadpoolctl==3.5.0

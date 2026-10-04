@@ -1,0 +1,11 @@
+# Mark generated outputs so git diff is cleaner
+dist/index.html linguist-generated=true
+results/results.json linguist-generated=true
+
+# Treat notebooks as binary to avoid large diffs on cell outputs
+# (nbstripout handles stripping before commit, but this is a fallback)
+notebooks/*.ipynb linguist-language=Jupyter\ Notebook
+
+# Normalise line endings to LF everywhere
+* text=auto eol=lf
+*.bat text eol=crlf
