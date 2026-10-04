@@ -200,11 +200,79 @@ def main() -> int:
             )
 
     # -----------------------------------------------------------------------
-    # Phase 6 to 10 stubs (to be wired in subsequent phases)
+    # Phase 6: Permutation importance
     # -----------------------------------------------------------------------
-    print("[Phase 6/10] Permutation importance ... (implemented in Phase 5)")
-    print("[Phase 7/10] Imbalance experiment + learning curves ... (implemented in Phase 5)")
-    print("[Phase 8/10] Timing ... (implemented in Phase 5)")
+    print("[Phase 6/10] Permutation importance ...")
+    if args.dry_run:
+        print("             Dry run mode: skipped permutation importance.")
+    else:
+        from src.explain import run_explainability
+
+        importance_payload = run_explainability(
+            models=config.MODEL_KEYS,
+            cv_output=cv_output,
+            X_dev=X_dev,
+            y_dev=y_dev,
+            n_repeats=2 if is_quick else 5,
+            seed=seed,
+            top_n=15,
+        )
+        for m, top_feats in importance_payload.items():
+            top3_str = ", ".join(f"{f['feature']} (+{f['importance_mean']:.4f})" for f in top_feats[:3])
+            print(f"             {m.upper()} Top 3: {top3_str}")
+
+    # -----------------------------------------------------------------------
+    # Phase 7: Imbalance experiment + learning curves
+    # -----------------------------------------------------------------------
+    print("[Phase 7/10] Imbalance experiment + learning curves ...")
+    if args.dry_run:
+        print("             Dry run mode: skipped experiments.")
+    else:
+        from src.experiments import run_imbalance_experiment, run_learning_curves
+
+        imb_results = run_imbalance_experiment(
+            X_dev=X_dev,
+            y_dev=y_dev,
+            models=config.MODEL_KEYS,
+            quick=is_quick,
+            seed=seed,
+        )
+        curves_results = run_learning_curves(
+            X_dev=X_dev,
+            y_dev=y_dev,
+            models=config.MODEL_KEYS,
+            quick=is_quick,
+            seed=seed,
+        )
+        print(f"             Evaluated {len(imb_results)} models across 3 imbalance strategies (none, balanced, smote).")
+        print(f"             Computed learning curves across {len(curves_results)} models.")
+
+    # -----------------------------------------------------------------------
+    # Phase 8: Timing & Hardware Telemetry
+    # -----------------------------------------------------------------------
+    print("[Phase 8/10] Timing ...")
+    if args.dry_run:
+        print("             Dry run mode: skipped timing benchmarks.")
+    else:
+        from src.timing import measure_timing_and_size
+
+        timing_payload = measure_timing_and_size(
+            models=config.MODEL_KEYS,
+            cv_output=cv_output,
+            X_dev=X_dev,
+            y_dev=y_dev,
+            X_hold=X_hold,
+            n_inference_runs=5 if is_quick else 10,
+            seed=seed,
+        )
+        hw = timing_payload["hardware"]
+        print(f"             Hardware: {hw['cpu_processor']} ({hw['cpu_cores']} cores) on {hw['os_name']} {hw['os_release']}")
+        for m, t_info in timing_payload["models"].items():
+            print(f"               {m.upper()}: train = {t_info['train_s']:.2f}s | infer = {t_info['infer_ms_per_1k']:.2f} ms/1k | size = {t_info['model_kb']:.1f} KB")
+
+    # -----------------------------------------------------------------------
+    # Phase 9 and 10 stubs (to be wired in Phase 6)
+    # -----------------------------------------------------------------------
     print("[Phase 9/10] Hold-out sanity check ... (implemented in Phase 6)")
     print("[Phase 10/10] Export and validate ... (implemented in Phase 6)")
 
