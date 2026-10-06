@@ -1410,27 +1410,22 @@
     <footer>
       <div class="footer-grid">
         <div class="footer-block">
-          <h4>Dataset & Seed</h4>
-          <p id="footer-dataset">UCI Default of Credit Card Clients</p>
-          <p id="footer-seed">Seed: 42 (Reproducible)</p>
-          <p id="footer-samples">24,000 dev rows / 6,000 hold-out</p>
+          <h4>Dataset &amp; Split</h4>
+          <p id="footer-dataset">UCI Default of Credit Card Clients (N = 30,000)</p>
+          <p id="footer-samples">24,000 dev rows (15-fold CV) &middot; 6,000 hold-out</p>
+          <p id="footer-seed">Random Seed: 42 (Stratified 80/20)</p>
         </div>
         <div class="footer-block">
-          <h4>Hardware Telemetry</h4>
-          <p id="footer-cpu">CPU: Unknown</p>
-          <p id="footer-cores">Cores: Unknown</p>
-          <p id="footer-os">Platform: Standalone</p>
+          <h4>Methodology &amp; Evaluation</h4>
+          <p>Cost-Sensitive Threshold Optimization (FN:FP = 5:1)</p>
+          <p>Repeated Stratified 5-Fold Cross-Validation &times; 3</p>
+          <p>Nadeau-Bengio Corrected Significance Testing</p>
         </div>
         <div class="footer-block">
-          <h4>Core Versions</h4>
-          <p id="footer-versions">Python, scikit-learn, imbalanced-learn</p>
-          <p id="footer-built">Built: UTC</p>
-        </div>
-        <div class="footer-block">
-          <h4>Architecture</h4>
-          <p>Zero runtime network requests.</p>
-          <p>Pure Vanilla HTML, CSS, inline SVG.</p>
-          <p>Colorblind-Safe Okabe-Ito Palette.</p>
+          <h4>Architecture &amp; Source</h4>
+          <p>Zero runtime network requests &middot; Offline standalone</p>
+          <p>Pure Vanilla HTML, CSS &amp; inline SVG charts</p>
+          <p><a href="https://github.com/abdulhayykhan/QuadVerdict" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-weight:600;">QuadVerdict Repository on GitHub &rarr;</a></p>
         </div>
       </div>
     </footer>
@@ -2539,24 +2534,14 @@
         if (!meta) return;
 
         const ds = document.getElementById('footer-dataset');
-        if (ds) ds.textContent = `${meta.dataset} (N = ${meta.n.toLocaleString()})`;
-
-        const seed = document.getElementById('footer-seed');
-        if (seed) seed.textContent = `Seed: ${meta.seed} (Stratified 80/20)`;
-
-        const cpu = document.getElementById('footer-cpu');
-        if (cpu && meta.hardware) cpu.textContent = `CPU: ${meta.hardware.cpu}`;
-
-        const cores = document.getElementById('footer-cores');
-        if (cores && meta.hardware) cores.textContent = `Cores: ${meta.hardware.cores}`;
-
-        const vers = document.getElementById('footer-versions');
-        if (vers && meta.versions) {
-          vers.textContent = `Python ${meta.versions.python} | sklearn ${meta.versions.sklearn} | imblearn ${meta.versions.imblearn}`;
+        if (ds && meta.dataset && meta.n) {
+          ds.textContent = `${meta.dataset} (N = ${meta.n.toLocaleString()})`;
         }
 
-        const built = document.getElementById('footer-built');
-        if (built) built.textContent = `Built: ${meta.built_at}`;
+        const seed = document.getElementById('footer-seed');
+        if (seed && meta.seed) {
+          seed.textContent = `Random Seed: ${meta.seed} (Stratified 80/20)`;
+        }
       }
 
       // -----------------------------------------------------------------------
