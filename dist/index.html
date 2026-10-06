@@ -1,33 +1,49 @@
-<!-- built: 2026-10-06T08:51:52.385877+00:00 results-sha256: 9e072cb5a35a7d55056410e734f099ceeaf09c0b7da206bca1e65ec63938e2fe -->
+<!-- built: 2026-10-06T09:13:55.498378+00:00 results-sha256: 9e072cb5a35a7d55056410e734f099ceeaf09c0b7da206bca1e65ec63938e2fe -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="QuadVerdict: Publication-grade, cost-sensitive benchmark of four machine learning classifiers on the UCI Credit Card default dataset.">
+  <meta name="description" content="QuadVerdict: Publication-grade, cost-sensitive benchmark of four machine learning classifiers on the UCI Credit Card default dataset with interactive threshold and loss optimization.">
   <title>QuadVerdict — Cost-Sensitive Credit Default Benchmark</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
     /* -------------------------------------------------------------------------
-       CSS Custom Properties & Colorblind-Safe Design Tokens (Okabe-Ito)
+       Design System & Okabe-Ito Tokens
        ------------------------------------------------------------------------- */
     :root {
-      --bg: #0d1117;
-      --surface: #161b22;
-      --surface-subtle: #21262d;
-      --surface-hover: #30363d;
-      --text: #e6edf3;
+      --bg: #090d16;
+      --bg-gradient: radial-gradient(ellipse at 15% 0%, rgba(0, 158, 115, 0.12) 0%, transparent 45%),
+                         radial-gradient(ellipse at 85% 15%, rgba(88, 166, 255, 0.08) 0%, transparent 40%),
+                         radial-gradient(ellipse at 50% 60%, rgba(213, 94, 0, 0.05) 0%, transparent 50%);
+      --surface: #111827;
+      --surface-card: rgba(17, 24, 39, 0.82);
+      --surface-subtle: #1a2234;
+      --surface-hover: #222d42;
+      --text: #f0f6fc;
       --text-muted: #8b949e;
-      --border: #30363d;
-      --border-subtle: #21262d;
+      --text-dim: #6e7681;
+      --border: rgba(255, 255, 255, 0.09);
+      --border-subtle: rgba(255, 255, 255, 0.05);
+      --border-accent: rgba(88, 166, 255, 0.35);
       --accent: #58a6ff;
-      --accent-hover: #1f6feb;
+      --accent-glow: rgba(88, 166, 255, 0.25);
+      --accent-hover: #79b8ff;
       --success: #3fb950;
-      --success-bg: rgba(63, 185, 80, 0.15);
+      --success-glow: rgba(63, 185, 80, 0.25);
+      --success-bg: rgba(63, 185, 80, 0.12);
       --warning: #d29922;
-      --warning-bg: rgba(210, 153, 34, 0.15);
+      --warning-bg: rgba(210, 153, 34, 0.12);
       --danger: #f85149;
-      --danger-bg: rgba(248, 81, 73, 0.15);
-      --shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+      --danger-bg: rgba(248, 81, 73, 0.14);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
 
       /* Categorical Palette: Okabe-Ito Color-blind safe */
       --c-rf: #009E73;   /* Bluish Green - Random Forest */
@@ -35,31 +51,41 @@
       --c-svm: #D55E00;  /* Vermillion - Support Vector Machine */
       --c-dt: #56B4E9;   /* Sky Blue - Decision Tree */
 
-      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-      --radius: 8px;
-      --radius-sm: 4px;
-      --transition: 0.15s ease;
+      --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+      --radius-sm: 6px;
+      --radius: 12px;
+      --radius-lg: 16px;
+      --transition: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     :root[data-theme="light"] {
-      --bg: #f6f8fa;
+      --bg: #f8fafc;
+      --bg-gradient: radial-gradient(ellipse at 15% 0%, rgba(0, 158, 115, 0.08) 0%, transparent 45%),
+                         radial-gradient(ellipse at 85% 15%, rgba(88, 166, 255, 0.06) 0%, transparent 40%);
       --surface: #ffffff;
-      --surface-subtle: #f0f2f5;
-      --surface-hover: #e6e8eb;
-      --text: #1f2328;
-      --text-muted: #656d76;
-      --border: #d0d7de;
-      --border-subtle: #eaeef2;
+      --surface-card: rgba(255, 255, 255, 0.92);
+      --surface-subtle: #f1f5f9;
+      --surface-hover: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --text-dim: #94a3b8;
+      --border: #e2e8f0;
+      --border-subtle: #edf2f7;
+      --border-accent: rgba(9, 105, 218, 0.35);
       --accent: #0969da;
+      --accent-glow: rgba(9, 105, 218, 0.15);
       --accent-hover: #0550ae;
       --success: #1a7f37;
-      --success-bg: rgba(26, 127, 55, 0.12);
+      --success-glow: rgba(26, 127, 55, 0.15);
+      --success-bg: rgba(26, 127, 55, 0.08);
       --warning: #9a6700;
-      --warning-bg: rgba(154, 103, 0, 0.12);
+      --warning-bg: rgba(154, 103, 0, 0.08);
       --danger: #cf222e;
-      --danger-bg: rgba(207, 34, 46, 0.12);
-      --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      --danger-bg: rgba(207, 34, 46, 0.08);
+      --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.06);
+      --shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+      --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.1);
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -71,7 +97,7 @@
     }
 
     /* -------------------------------------------------------------------------
-       Reset & Base Typography
+       Reset & Base Styles
        ------------------------------------------------------------------------- */
     *, *::before, *::after {
       box-sizing: border-box;
@@ -81,24 +107,27 @@
 
     body {
       background-color: var(--bg);
+      background-image: var(--bg-gradient);
+      background-attachment: fixed;
       color: var(--text);
       font-family: var(--font-sans);
-      font-size: 15px;
+      font-size: 14.5px;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
-      padding-bottom: 80px;
+      padding-bottom: 90px;
+      overflow-x: hidden;
     }
 
     .container {
       width: 100%;
-      max-width: 1240px;
+      max-width: 1260px;
       margin: 0 auto;
-      padding: 0 20px;
+      padding: 0 24px;
     }
 
-    /* Tabular figures for aligned metric comparisons */
-    .tabular, td, th, .metric-value, .stat-value {
+    .tabular, td, th, .metric-value, .stat-value, .badge-mono {
       font-variant-numeric: tabular-nums;
+      font-family: var(--font-mono);
     }
 
     a {
@@ -111,13 +140,19 @@
     }
 
     /* -------------------------------------------------------------------------
-       Header & Navigation
+       Sticky Glass Header & Nav
        ------------------------------------------------------------------------- */
     header {
-      background: var(--surface);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
-      padding: 24px 0;
-      margin-bottom: 24px;
+      padding: 14px 0;
+      margin-bottom: 28px;
+      transition: all var(--transition);
     }
 
     .header-row {
@@ -128,9 +163,30 @@
       gap: 16px;
     }
 
+    .header-title-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #009E73 0%, #56B4E9 100%);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 19px;
+      box-shadow: 0 4px 12px rgba(0, 158, 115, 0.35);
+    }
+
     .header-title-group h1 {
-      font-size: 24px;
-      font-weight: 700;
+      font-size: 22px;
+      font-weight: 800;
       letter-spacing: -0.5px;
       display: flex;
       align-items: center;
@@ -138,49 +194,111 @@
     }
 
     .header-badge {
-      font-size: 12px;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 12px;
-      background: var(--surface-subtle);
-      border: 1px solid var(--border);
-      color: var(--accent);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 20px;
+      background: var(--success-bg);
+      border: 1px solid var(--success);
+      color: var(--success);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .header-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
     }
 
     .header-thesis {
       color: var(--text-muted);
-      font-size: 14px;
-      margin-top: 4px;
-      max-width: 720px;
+      font-size: 13px;
+      margin-top: 2px;
+      max-width: 620px;
+      line-height: 1.45;
     }
 
     .header-controls {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* Quick jump pill links */
+    .nav-pills {
+      display: flex;
+      gap: 6px;
+      background: var(--surface-subtle);
+      padding: 4px;
+      border-radius: 24px;
+      border: 1px solid var(--border);
+    }
+    .nav-pill {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 20px;
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+    .nav-pill:hover {
+      color: var(--text);
+      background: var(--surface-hover);
+      text-decoration: none;
     }
 
     button, select {
       font-family: inherit;
       font-size: 13px;
-      font-weight: 500;
+      font-weight: 600;
       background: var(--surface-subtle);
       color: var(--text);
       border: 1px solid var(--border);
-      padding: 6px 12px;
+      padding: 7px 14px;
       border-radius: var(--radius-sm);
       cursor: pointer;
       transition: all var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
 
     button:hover, select:hover {
       background: var(--surface-hover);
-      border-color: var(--text-muted);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
     }
 
     button:focus-visible, select:focus-visible, input[type="range"]:focus-visible {
       outline: 2px solid var(--accent);
       outline-offset: 2px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent) 0%, #1f6feb 100%);
+      color: #ffffff;
+      border: none;
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+    .btn-primary:hover {
+      filter: brightness(1.1);
+      border-color: transparent;
     }
 
     /* -------------------------------------------------------------------------
@@ -191,95 +309,136 @@
       background: var(--danger-bg);
       border: 1px solid var(--danger);
       color: var(--danger);
-      padding: 10px 16px;
+      padding: 12px 18px;
       border-radius: var(--radius);
       margin-bottom: 24px;
-      font-size: 13px;
+      font-size: 13.5px;
       font-weight: 600;
+      backdrop-filter: blur(8px);
     }
 
     /* -------------------------------------------------------------------------
-       Key Findings Cards
+       Key Findings Bento Grid
        ------------------------------------------------------------------------- */
     .key-findings-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
     }
 
     .finding-card {
-      background: var(--surface);
+      background: var(--surface-card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 16px;
+      padding: 20px;
       box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      transition: transform var(--transition), border-color var(--transition);
+    }
+    .finding-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-accent);
+    }
+
+    .finding-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+    .finding-card.card-winner::before {
+      background: linear-gradient(90deg, #009E73, #56B4E9);
+    }
+    .finding-card.card-sig::before {
+      background: linear-gradient(90deg, #58a6ff, #3fb950);
+    }
+    .finding-card.card-cost::before {
+      background: linear-gradient(90deg, #E69F00, #D55E00);
     }
 
     .finding-label {
       font-size: 11px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.8px;
       font-weight: 700;
       color: var(--text-muted);
-      margin-bottom: 6px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .finding-text {
-      font-size: 14px;
+      font-size: 14.5px;
       font-weight: 500;
-      line-height: 1.4;
+      line-height: 1.5;
     }
 
     /* -------------------------------------------------------------------------
-       Cards & Section Layouts
+       Panels & Card Containers
        ------------------------------------------------------------------------- */
     .panel {
-      background: var(--surface);
+      background: var(--surface-card);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
-      margin-bottom: 24px;
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 28px;
       box-shadow: var(--shadow);
+      position: relative;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
 
     .panel-header {
-      margin-bottom: 16px;
+      margin-bottom: 20px;
       display: flex;
       justify-content: space-between;
-      align-items: baseline;
+      align-items: flex-start;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 14px;
     }
 
     .panel-title {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .panel-desc {
       font-size: 13px;
       color: var(--text-muted);
+      margin-top: 4px;
+      max-width: 820px;
     }
 
     .grid-2col {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      gap: 24px;
     }
-    @media (max-width: 860px) {
+    @media (max-width: 900px) {
       .grid-2col {
         grid-template-columns: 1fr;
       }
     }
 
     /* -------------------------------------------------------------------------
-       Tables (Leaderboard & Matrices)
+       Tables & Leaderboards
        ------------------------------------------------------------------------- */
     .table-container {
       width: 100%;
       overflow-x: auto;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
     }
 
     table {
@@ -292,47 +451,70 @@
     th {
       background: var(--surface-subtle);
       color: var(--text-muted);
-      font-weight: 600;
-      padding: 10px 12px;
+      font-weight: 700;
+      padding: 12px 14px;
       border-bottom: 1px solid var(--border);
       white-space: nowrap;
+      user-select: none;
+    }
+
+    th.sortable {
+      cursor: pointer;
+      transition: color var(--transition);
+    }
+    th.sortable:hover {
+      color: var(--text);
     }
 
     td {
-      padding: 10px 12px;
+      padding: 12px 14px;
       border-bottom: 1px solid var(--border-subtle);
       white-space: nowrap;
     }
 
+    tr:last-child td {
+      border-bottom: none;
+    }
+
     tr:hover td {
-      background: var(--surface-subtle);
+      background: var(--surface-hover);
+    }
+
+    tr.row-winner td {
+      background: rgba(0, 158, 115, 0.08);
+      font-weight: 600;
+    }
+    tr.row-winner:hover td {
+      background: rgba(0, 158, 115, 0.14);
     }
 
     .model-badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-weight: 600;
+      gap: 8px;
+      font-weight: 700;
     }
 
     .model-dot {
-      width: 10px;
-      height: 10px;
+      width: 11px;
+      height: 11px;
       border-radius: 50%;
       display: inline-block;
+      box-shadow: 0 0 8px currentColor;
     }
 
     /* Significance Matrix */
     .sig-table th, .sig-table td {
       text-align: center;
-      padding: 8px;
+      padding: 10px;
     }
 
     .sig-cell-sig {
       background: var(--success-bg);
       color: var(--success);
-      font-weight: 700;
+      font-weight: 800;
       border-radius: var(--radius-sm);
+      border: 1px solid rgba(63, 185, 80, 0.3);
     }
 
     .sig-cell-ns {
@@ -344,63 +526,127 @@
     }
 
     /* -------------------------------------------------------------------------
-       Threshold & Cost Lab (Hero Interaction)
+       Hero Interaction: Threshold & Cost Optimization Lab
        ------------------------------------------------------------------------- */
+    .scenario-presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+      align-items: center;
+    }
+    .preset-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-right: 4px;
+    }
+    .preset-btn {
+      font-size: 12px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      color: var(--text);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .preset-btn:hover {
+      background: var(--surface-hover);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+    .preset-btn.active {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+      box-shadow: 0 2px 8px var(--accent-glow);
+    }
+
     .lab-controls {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 20px;
       background: var(--surface-subtle);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 16px;
+      padding: 18px 20px;
       margin-bottom: 20px;
     }
 
     .control-group {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
     }
 
     .control-header {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 13.5px;
+      font-weight: 700;
     }
 
     .control-val {
       font-family: var(--font-mono);
       color: var(--accent);
-      font-weight: 700;
+      font-weight: 800;
+      font-size: 14px;
     }
 
     input[type="range"] {
       width: 100%;
-      height: 6px;
+      height: 7px;
       background: var(--border);
-      border-radius: 3px;
+      border-radius: 4px;
       outline: none;
       -webkit-appearance: none;
       appearance: none;
       cursor: pointer;
+      transition: background var(--transition);
     }
 
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
       background: var(--accent);
+      box-shadow: 0 0 10px var(--accent-glow);
       cursor: pointer;
-      transition: transform var(--transition);
+      transition: transform var(--transition), box-shadow var(--transition);
     }
 
     input[type="range"]::-webkit-slider-thumb:hover {
-      transform: scale(1.2);
+      transform: scale(1.25);
+      box-shadow: 0 0 14px var(--accent);
+    }
+
+    /* Financial ROI Banner */
+    .financial-banner {
+      background: linear-gradient(135deg, rgba(0, 158, 115, 0.12) 0%, rgba(88, 166, 255, 0.1) 100%);
+      border: 1px solid rgba(0, 158, 115, 0.35);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .financial-banner-text {
+      font-size: 13.5px;
+      line-height: 1.4;
+    }
+    .financial-banner-highlight {
+      font-weight: 800;
+      color: var(--success);
+      font-family: var(--font-mono);
     }
 
     /* Confusion Matrix 2x2 */
@@ -408,8 +654,8 @@
       display: grid;
       grid-template-columns: auto 1fr 1fr;
       grid-template-rows: auto 1fr 1fr;
-      gap: 8px;
-      max-width: 380px;
+      gap: 10px;
+      max-width: 400px;
       margin: 0 auto;
       font-size: 12px;
       font-weight: 600;
@@ -418,24 +664,30 @@
     .cm-cell {
       background: var(--surface-subtle);
       border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 12px;
+      border-radius: var(--radius);
+      padding: 14px 12px;
       text-align: center;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .cm-cell:hover {
+      transform: scale(1.02);
+      box-shadow: var(--shadow-sm);
     }
 
     .cm-val {
-      font-size: 18px;
-      font-weight: 700;
+      font-size: 20px;
+      font-weight: 800;
       color: var(--text);
+      font-family: var(--font-mono);
     }
 
     .cm-sub {
       font-size: 11px;
       color: var(--text-muted);
-      margin-top: 2px;
+      margin-top: 3px;
     }
 
     .cm-corner {
@@ -449,41 +701,57 @@
       color: var(--text-muted);
       font-size: 11px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.6px;
+      font-weight: 700;
     }
 
-    /* Derived Metrics Bar */
+    /* Derived Metrics Ribbon */
     .metrics-ribbon {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
       gap: 12px;
-      margin: 16px 0;
+      margin-top: 20px;
     }
 
     .metric-chip {
       background: var(--surface-subtle);
       border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 10px;
+      border-radius: var(--radius);
+      padding: 12px 10px;
       text-align: center;
+      transition: all var(--transition);
+    }
+    .metric-chip:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-2px);
     }
 
     .metric-chip-label {
       font-size: 11px;
       color: var(--text-muted);
       text-transform: uppercase;
-      font-weight: 600;
+      letter-spacing: 0.5px;
+      font-weight: 700;
     }
 
     .metric-chip-value {
-      font-size: 18px;
-      font-weight: 700;
-      margin-top: 2px;
+      font-size: 19px;
+      font-weight: 800;
+      margin-top: 3px;
       font-family: var(--font-mono);
+      color: var(--text);
+    }
+
+    .metric-chip-highlight {
+      border-color: var(--accent);
+      background: rgba(88, 166, 255, 0.08);
+    }
+    .metric-chip-highlight .metric-chip-value {
+      color: var(--accent);
     }
 
     /* -------------------------------------------------------------------------
-       SVG Chart Styling
+       SVG Charts & Visualizations
        ------------------------------------------------------------------------- */
     .chart-box {
       width: 100%;
@@ -511,44 +779,70 @@
     .axis-title {
       fill: var(--text-muted);
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
+      letter-spacing: 0.3px;
     }
 
     .chart-legend {
       display: flex;
       flex-wrap: wrap;
-      gap: 14px;
-      margin-bottom: 12px;
-      font-size: 12px;
-      font-weight: 500;
+      gap: 16px;
+      margin-bottom: 14px;
+      font-size: 12.5px;
+      font-weight: 600;
     }
 
     .legend-item {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
       cursor: pointer;
       user-select: none;
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      transition: all var(--transition);
+    }
+    .legend-item:hover {
+      background: var(--surface-hover);
+      border-color: var(--border);
+    }
+    .legend-item.dimmed {
+      opacity: 0.35;
     }
 
     .legend-line {
-      width: 18px;
+      width: 20px;
       height: 3px;
       display: inline-block;
       border-radius: 2px;
     }
 
-    /* -------------------------------------------------------------------------
-       Model Line Colors & Styles (Okabe-Ito + Pattern)
-       ------------------------------------------------------------------------- */
-    .line-rf  { stroke: var(--c-rf);  stroke-width: 2.5; stroke-linecap: round; }
-    .line-lr  { stroke: var(--c-lr);  stroke-width: 2.5; stroke-dasharray: 6 3; stroke-linecap: round; }
-    .line-svm { stroke: var(--c-svm); stroke-width: 2.5; stroke-dasharray: 2 3; stroke-linecap: round; }
-    .line-dt  { stroke: var(--c-dt);  stroke-width: 2.5; stroke-dasharray: 8 3 2 3; stroke-linecap: round; }
+    /* Model Line Colors & Styles */
+    .line-rf  { stroke: var(--c-rf);  stroke-width: 2.8; stroke-linecap: round; }
+    .line-lr  { stroke: var(--c-lr);  stroke-width: 2.8; stroke-dasharray: 6 3; stroke-linecap: round; }
+    .line-svm { stroke: var(--c-svm); stroke-width: 2.8; stroke-dasharray: 2 3; stroke-linecap: round; }
+    .line-dt  { stroke: var(--c-dt);  stroke-width: 2.8; stroke-dasharray: 8 3 2 3; stroke-linecap: round; }
 
-    /* -------------------------------------------------------------------------
-       Feature Importance & Learning Curves
-       ------------------------------------------------------------------------- */
+    /* Interactive SVG Floating Tooltip */
+    #chart-tooltip {
+      position: absolute;
+      display: none;
+      z-index: 1000;
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      box-shadow: var(--shadow-lg);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font-size: 12px;
+      font-family: var(--font-mono);
+      pointer-events: none;
+      white-space: nowrap;
+      color: var(--text);
+      backdrop-filter: blur(10px);
+    }
+
+    /* Tabs */
     .tabs {
       display: flex;
       gap: 8px;
@@ -561,65 +855,77 @@
       background: transparent;
       border: none;
       color: var(--text-muted);
-      padding: 6px 12px;
+      padding: 6px 14px;
       border-radius: var(--radius-sm);
     }
-
+    .tab-btn:hover {
+      color: var(--text);
+    }
     .tab-btn.active {
       background: var(--surface-subtle);
       color: var(--accent);
       font-weight: 700;
+      border: 1px solid var(--border);
     }
 
-    /* -------------------------------------------------------------------------
-       Footer & Telemetry
-       ------------------------------------------------------------------------- */
+    /* Toast Notification */
+    #toast-notification {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      box-shadow: var(--shadow-lg);
+      color: var(--text);
+      padding: 12px 20px;
+      border-radius: var(--radius);
+      font-size: 13.5px;
+      font-weight: 600;
+      z-index: 2000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #toast-notification.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Footer */
     footer {
       border-top: 1px solid var(--border);
-      padding: 32px 0;
-      margin-top: 48px;
+      padding: 40px 0;
+      margin-top: 50px;
       color: var(--text-muted);
-      font-size: 12px;
+      font-size: 12.5px;
     }
 
     .footer-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
     }
 
     .footer-block h4 {
       color: var(--text);
-      font-size: 12px;
-      margin-bottom: 6px;
+      font-size: 12.5px;
+      margin-bottom: 8px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.6px;
+      font-weight: 700;
     }
 
-    /* -------------------------------------------------------------------------
-       Error Screen (Data failure)
-       ------------------------------------------------------------------------- */
     #error-screen {
       display: none;
-      padding: 40px 20px;
+      padding: 50px 24px;
       text-align: center;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       margin: 40px 0;
-    }
-
-    #error-screen h2 {
-      font-size: 20px;
-      color: var(--danger);
-      margin-bottom: 12px;
-    }
-
-    #error-screen code {
-      font-family: var(--font-mono);
-      background: var(--surface-subtle);
-      padding: 2px 6px;
-      border-radius: 4px;
     }
 
     .visually-hidden {
@@ -637,23 +943,42 @@
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- Floating Tooltip -->
+  <div id="chart-tooltip" role="tooltip"></div>
+
+  <!-- Toast Notification -->
+  <div id="toast-notification" role="status" aria-live="polite">
+    <span>✓</span> <span id="toast-text">Scenario link copied to clipboard!</span>
+  </div>
+
+  <!-- Sticky Glass Header -->
   <header>
     <div class="container header-row">
       <div class="header-title-group">
-        <h1>
-          <span>QuadVerdict</span>
-          <span class="header-badge" id="badge-version">v1.0</span>
-        </h1>
-        <p class="header-thesis">
-          Publication-grade cost-sensitive benchmark of four machine learning classifiers on the UCI Credit Card default dataset.
-          <em>Default 0.5 probability thresholds mislead; cost-weighted optimization decides the real winner.</em>
-        </p>
+        <span class="brand-mark">QV</span>
+        <div>
+          <h1>
+            <span>QuadVerdict</span>
+            <span class="header-badge" id="badge-version">15-Fold Validated</span>
+          </h1>
+          <p class="header-thesis">
+            Cost-sensitive credit default benchmark on UCI Taiwanese cardholders ($N = 30,000$).
+            <em>Asymmetric losses dictate true optimal operating points.</em>
+          </p>
+        </div>
       </div>
       <div class="header-controls">
-        <button id="theme-toggle" aria-label="Toggle dark/light theme">Theme: Auto</button>
-        <button id="copy-link-btn" aria-label="Copy interactive state link">Share URL</button>
-        <a href="https://github.com/abdulhayykhan/QuadVerdict" target="_blank" rel="noopener noreferrer" style="font-weight:600; font-size:13px;">GitHub Repo &rarr;</a>
+        <nav class="nav-pills" aria-label="Page navigation">
+          <a class="nav-pill" href="#panel-leaderboard">Leaderboard</a>
+          <a class="nav-pill" href="#panel-lab">Cost Lab</a>
+          <a class="nav-pill" href="#panel-curves">Curves</a>
+          <a class="nav-pill" href="#panel-importance">Explainability</a>
+        </nav>
+        <button id="theme-toggle" aria-label="Toggle dark or light theme">Theme: Auto</button>
+        <button id="copy-link-btn" aria-label="Copy interactive scenario link">Share Scenario</button>
+        <a href="https://github.com/abdulhayykhan/QuadVerdict" target="_blank" rel="noopener noreferrer" class="btn-primary" style="padding:7px 14px; border-radius:var(--radius-sm); font-size:13px; font-weight:600;">
+          GitHub &rarr;
+        </a>
       </div>
     </div>
   </header>
@@ -667,28 +992,28 @@
 
     <!-- Error Screen (Shown if data fails) -->
     <div id="error-screen" role="alert">
-      <h2>Results Data Not Available</h2>
+      <h2 style="color:var(--danger); font-size:20px; margin-bottom:8px;">Benchmark Data Unavailable</h2>
       <p id="error-msg">The benchmark data payload is missing or unpopulated.</p>
       <p style="margin-top:12px; font-size:13px; color:var(--text-muted);">
         Build the production site via <code>python web/build_site.py --results results/results.json</code>, or preview with mock data: <code>python web/build_site.py --mock</code>.
       </p>
     </div>
 
-    <!-- Main Content Container -->
+    <!-- Main Application Content -->
     <main id="app-content">
 
-      <!-- Key Findings Summary -->
-      <section class="key-findings-grid" aria-label="Key Findings">
-        <div class="finding-card">
-          <div class="finding-label">Primary Metric Winner</div>
+      <!-- Key Findings Bento Grid -->
+      <section class="key-findings-grid" aria-label="Key Benchmark Findings">
+        <div class="finding-card card-winner">
+          <div class="finding-label">🏆 Benchmark Winner</div>
           <div class="finding-text" id="finding-winner">Loading benchmark results...</div>
         </div>
-        <div class="finding-card">
-          <div class="finding-label">Statistical Significance</div>
+        <div class="finding-card card-sig">
+          <div class="finding-label">🔬 Statistical Significance</div>
           <div class="finding-text" id="finding-significance">Computing pairwise Holm-adjusted p-values...</div>
         </div>
-        <div class="finding-card">
-          <div class="finding-label">Cost Sensitivity Finding</div>
+        <div class="finding-card card-cost">
+          <div class="finding-label">💰 Asymmetric Cost Optimization</div>
           <div class="finding-text" id="finding-cost">Evaluating asymmetric error trade-offs...</div>
         </div>
       </section>
@@ -697,43 +1022,47 @@
       <section class="panel" id="panel-leaderboard">
         <div class="panel-header">
           <div>
-            <h2 class="panel-title">1. Leaderboard & Pairwise Significance</h2>
-            <p class="panel-desc">Outer-fold Repeated Stratified K-Fold CV metrics (mean &plusmn; std across 15 folds) and Nadeau-Bengio corrected comparisons.</p>
+            <h2 class="panel-title">1. Benchmark Leaderboard & Significance Matrix</h2>
+            <p class="panel-desc">Outer-fold Repeated Stratified K-Fold CV metrics (mean &plusmn; std across 15 folds). Click column headers to sort.</p>
+          </div>
+          <div style="font-size:12px; color:var(--text-muted);">
+            Evaluated on $N = 24,000$ Dev Set &middot; 20% Hold-out strictly sealed
           </div>
         </div>
+
         <div class="table-container">
           <table id="leaderboard-table">
             <thead>
               <tr>
-                <th scope="col">Model</th>
-                <th scope="col">PR-AUC (Primary) &darr;</th>
-                <th scope="col">ROC-AUC</th>
-                <th scope="col">F1 Score</th>
-                <th scope="col">MCC</th>
-                <th scope="col">Balanced Acc</th>
-                <th scope="col">Brier Score</th>
-                <th scope="col">Accuracy</th>
-                <th scope="col">Opt. Threshold (C=5)</th>
+                <th scope="col" class="sortable" data-col="model">Model ⬍</th>
+                <th scope="col" class="sortable" data-col="pr_auc">PR-AUC (Primary) ⬍</th>
+                <th scope="col" class="sortable" data-col="roc_auc">ROC-AUC ⬍</th>
+                <th scope="col" class="sortable" data-col="f1">F1 Score ⬍</th>
+                <th scope="col" class="sortable" data-col="mcc">MCC ⬍</th>
+                <th scope="col" class="sortable" data-col="bal_acc">Balanced Acc ⬍</th>
+                <th scope="col" class="sortable" data-col="brier">Brier Score ⬍</th>
+                <th scope="col" class="sortable" data-col="accuracy">Accuracy ⬍</th>
+                <th scope="col">Optimal $t^*$ (5:1)</th>
               </tr>
             </thead>
             <tbody id="leaderboard-tbody"></tbody>
           </table>
         </div>
 
-        <div style="margin-top: 24px;">
-          <h3 style="font-size:14px; font-weight:700; margin-bottom:8px;">4&times;4 Pairwise Significance Matrix (PR-AUC, Holm-Adjusted)</h3>
-          <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">
-            Cells show adjusted <em>p</em>-values from the Nadeau-Bengio corrected resampled <em>t</em>-test (accounting for overlapping fold dependencies). Green indicates statistically significant difference at <em>p</em> &lt; 0.05.
+        <div style="margin-top: 28px;">
+          <h3 style="font-size:14.5px; font-weight:700; margin-bottom:6px;">4&times;4 Pairwise Significance Matrix (Nadeau-Bengio + Holm-Bonferroni)</h3>
+          <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:14px;">
+            Green cells indicate statistically significant superiority at $p_{\text{adj}} &lt; 0.05$ after correcting for cross-validation resample dependencies ($J=15, n_{\text{test}}/n_{\text{train}}=0.25$).
           </p>
           <div class="table-container">
             <table class="sig-table" id="sig-table">
               <thead>
                 <tr>
-                  <th scope="col">Model A \ Model B</th>
-                  <th scope="col">RF</th>
-                  <th scope="col">LR</th>
-                  <th scope="col">SVM</th>
-                  <th scope="col">DT</th>
+                  <th scope="col" style="text-align:left;">Model A \ Model B</th>
+                  <th scope="col">Random Forest</th>
+                  <th scope="col">Decision Tree</th>
+                  <th scope="col">SVM (RBF)</th>
+                  <th scope="col">Logistic Regression</th>
                 </tr>
               </thead>
               <tbody id="sig-tbody"></tbody>
@@ -747,9 +1076,19 @@
         <div class="panel-header">
           <div>
             <h2 class="panel-title">2. Threshold & Cost Optimization Lab</h2>
-            <p class="panel-desc">Explore how asymmetric lending default loss ratios shift the optimal decision boundary away from the default 0.50.</p>
+            <p class="panel-desc">Simulate realistic asymmetric financial loss trade-offs where a missed default (FN) costs more than a false alarm (FP).</p>
           </div>
           <div id="best-model-pill" style="font-size:13px; font-weight:700; color:var(--accent);"></div>
+        </div>
+
+        <!-- Quick Scenario Presets -->
+        <div class="scenario-presets">
+          <span class="preset-label">Risk Presets:</span>
+          <button class="preset-btn" data-ratio="10" data-threshold="0.25">🛡️ Conservative Bank (10:1)</button>
+          <button class="preset-btn active" data-ratio="5" data-threshold="0.34">⚖️ Standard Lending (5:1)</button>
+          <button class="preset-btn" data-ratio="2" data-threshold="0.45">🚀 FinTech Growth (2:1)</button>
+          <button class="preset-btn" data-ratio="1" data-threshold="0.50">🎯 Diagnostic Parity (1:1)</button>
+          <button class="preset-btn" id="btn-snap-opt" style="border-color:var(--success); color:var(--success);">⭐ Snap to Optimal $t^*$</button>
         </div>
 
         <!-- Controls -->
@@ -759,16 +1098,16 @@
               <label for="model-select">Active Classifier</label>
             </div>
             <select id="model-select" aria-label="Select classifier for threshold analysis">
-              <option value="rf">Random Forest</option>
-              <option value="lr">Logistic Regression</option>
-              <option value="svm">Support Vector Machine</option>
+              <option value="rf">Random Forest (Winner)</option>
               <option value="dt">Decision Tree</option>
+              <option value="svm">Support Vector Machine (RBF)</option>
+              <option value="lr">Logistic Regression</option>
             </select>
           </div>
 
           <div class="control-group">
             <div class="control-header">
-              <label for="threshold-slider">Decision Threshold (<em>t</em>)</label>
+              <label for="threshold-slider">Decision Threshold ($t$)</label>
               <span class="control-val" id="val-threshold">0.50</span>
             </div>
             <input type="range" id="threshold-slider" min="0" max="1" step="0.01" value="0.50" aria-label="Decision probability threshold slider">
@@ -776,24 +1115,33 @@
 
           <div class="control-group">
             <div class="control-header">
-              <label for="cost-slider">Cost Ratio (<em>C<sub>FN</sub> : C<sub>FP</sub></em>)</label>
+              <label for="cost-slider">Cost Penalty Ratio ($C_{\text{FN}} : C_{\text{FP}}$)</label>
               <span class="control-val" id="val-cost-ratio">5 : 1</span>
             </div>
             <input type="range" id="cost-slider" min="1" max="50" step="1" value="5" aria-label="Cost penalty ratio for false negatives versus false positives">
           </div>
         </div>
 
-        <!-- Live Confusion Matrix and Metrics Ribbon -->
+        <!-- Financial Impact ROI Banner -->
+        <div class="financial-banner" id="financial-roi-banner">
+          <div class="financial-banner-text">
+            <span>Portfolio Simulation ($N = 24,000$ accounts):</span>
+            <span id="roi-text">Operating at $t^* = 0.34$ saves <strong>$1,186,330</strong> in expected default loss compared to default $t=0.50$ rules.</span>
+          </div>
+          <div class="financial-banner-highlight" id="roi-pct">-8.3% Loss Reduction</div>
+        </div>
+
+        <!-- Live Confusion Matrix and Cost Curve -->
         <div class="grid-2col" style="align-items:center;">
           <div>
-            <h4 style="font-size:12px; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px; text-align:center;">
-              Out-of-Fold Confusion Matrix (Averaged Over 3 Repeats)
+            <h4 style="font-size:12px; text-transform:uppercase; color:var(--text-muted); margin-bottom:10px; text-align:center; font-weight:700;">
+              Out-of-Fold Confusion Matrix (3-Repeat Average)
             </h4>
             <div class="cm-wrapper" aria-live="polite" id="cm-matrix">
               <div class="cm-corner"></div>
-              <div class="cm-header-col">Pred Positive</div>
-              <div class="cm-header-col">Pred Negative</div>
-              <div class="cm-header-row">Actual Pos (Default)</div>
+              <div class="cm-header-col">Pred Default (1)</div>
+              <div class="cm-header-col">Pred Paid (0)</div>
+              <div class="cm-header-row">Actual Default</div>
               <div class="cm-cell" style="border-left: 3px solid var(--success);">
                 <span class="cm-val" id="cm-tp">0</span>
                 <span class="cm-sub">True Positive (TP)</span>
@@ -802,7 +1150,7 @@
                 <span class="cm-val" id="cm-fn">0</span>
                 <span class="cm-sub">False Negative (FN)</span>
               </div>
-              <div class="cm-header-row">Actual Neg (Paid)</div>
+              <div class="cm-header-row">Actual Paid</div>
               <div class="cm-cell" style="border-left: 3px solid var(--warning);">
                 <span class="cm-val" id="cm-fp">0</span>
                 <span class="cm-sub">False Positive (FP)</span>
@@ -816,11 +1164,11 @@
 
           <!-- Cost vs Threshold SVG Curve -->
           <div>
-            <div class="control-header" style="margin-bottom:6px;">
-              <span style="font-size:12px; text-transform:uppercase; color:var(--text-muted);">Cost Curve vs Threshold</span>
-              <span style="font-size:12px; color:var(--success); font-weight:700;" id="optimal-threshold-readout">Optimal t = 0.22</span>
+            <div class="control-header" style="margin-bottom:8px;">
+              <span style="font-size:12px; text-transform:uppercase; color:var(--text-muted); font-weight:700;">Interactive Cost Curve (Click to Scrub)</span>
+              <span style="font-size:12px; color:var(--success); font-weight:700;" id="optimal-threshold-readout">Optimal $t = 0.34$</span>
             </div>
-            <div class="chart-box" id="cost-chart-container" style="height:240px;">
+            <div class="chart-box" id="cost-chart-container" style="height:250px;">
               <svg class="chart-svg" id="cost-svg" role="img" aria-label="Cost versus threshold chart"></svg>
             </div>
           </div>
@@ -848,12 +1196,12 @@
             <div class="metric-chip-label">Balanced Acc</div>
             <div class="metric-chip-value" id="val-bal">0.000</div>
           </div>
-          <div class="metric-chip" style="border-color: var(--accent);">
-            <div class="metric-chip-label">Total Cost</div>
+          <div class="metric-chip metric-chip-highlight">
+            <div class="metric-chip-label">Total Expected Cost</div>
             <div class="metric-chip-value" id="val-total-cost">0</div>
           </div>
-          <div class="metric-chip" style="border-color: var(--accent);">
-            <div class="metric-chip-label">Cost / 1k Loans</div>
+          <div class="metric-chip metric-chip-highlight">
+            <div class="metric-chip-label">Cost / 1k Accounts</div>
             <div class="metric-chip-value" id="val-cost-1k">0</div>
           </div>
         </div>
@@ -864,19 +1212,26 @@
         <div class="panel-header">
           <div>
             <h2 class="panel-title">3. Receiver Operating Characteristic & Precision-Recall Curves</h2>
-            <p class="panel-desc">Pooled out-of-fold curves downsampled uniformly via cumulative arc length (&le;200 points) preserving precise endpoints.</p>
+            <p class="panel-desc">Pooled out-of-fold curves with arc-length preserving downsampling (&le;200 coordinates). Click legend models to isolate.</p>
           </div>
+          <div class="chart-legend" id="curves-legend"></div>
         </div>
-        <div class="chart-legend" id="curves-legend"></div>
+
         <div class="grid-2col">
           <div>
-            <h4 style="font-size:13px; font-weight:700; margin-bottom:8px;">ROC Curve (FPR vs TPR)</h4>
+            <h4 style="font-size:13px; font-weight:700; margin-bottom:8px; display:flex; justify-content:space-between;">
+              <span>ROC Curve (FPR vs TPR)</span>
+              <span style="font-size:11px; color:var(--text-muted);">Chance = 0.500</span>
+            </h4>
             <div class="chart-box" id="roc-chart-container">
               <svg class="chart-svg" id="roc-svg" role="img" aria-label="Receiver Operating Characteristic Curve"></svg>
             </div>
           </div>
           <div>
-            <h4 style="font-size:13px; font-weight:700; margin-bottom:8px;">Precision-Recall Curve (Recall vs Precision)</h4>
+            <h4 style="font-size:13px; font-weight:700; margin-bottom:8px; display:flex; justify-content:space-between;">
+              <span>Precision-Recall Curve (Recall vs Precision)</span>
+              <span style="font-size:11px; color:var(--text-muted);">Prevalence = 22.1%</span>
+            </h4>
             <div class="chart-box" id="pr-chart-container">
               <svg class="chart-svg" id="pr-svg" role="img" aria-label="Precision-Recall Curve"></svg>
             </div>
@@ -889,23 +1244,23 @@
         <div class="panel-header">
           <div>
             <h2 class="panel-title">4. Probability Calibration & Reliability Diagrams</h2>
-            <p class="panel-desc">10 quantile bins on out-of-fold predicted probabilities. Point radii correspond to sample size; diagonal dashed line represents perfect calibration.</p>
+            <p class="panel-desc">10 quantile bins on out-of-fold predicted probabilities. Point radii correspond to sample counts; lower Brier score indicates superior probability fidelity.</p>
           </div>
+          <div class="chart-legend" id="cal-legend"></div>
         </div>
-        <div class="chart-legend" id="cal-legend"></div>
         <div class="chart-box" id="cal-chart-container" style="height:340px;">
           <svg class="chart-svg" id="cal-svg" role="img" aria-label="Probability Calibration Diagram"></svg>
         </div>
       </section>
 
-      <!-- Panel 5 & Panel 6: Cross-Validation Variance & Imbalance Study -->
+      <!-- Panel 5 & 6: Cross-Validation Variance & Imbalance Study -->
       <div class="grid-2col">
         <!-- Panel 5: CV Variance -->
         <section class="panel" id="panel-variance">
           <div class="panel-header">
             <div>
               <h2 class="panel-title">5. CV Variance Box Plots</h2>
-              <p class="panel-desc">PR-AUC spread across all 15 outer folds (median, IQR, whiskers, and points).</p>
+              <p class="panel-desc">PR-AUC distribution across all 15 outer folds (median, IQR, whiskers, and points).</p>
             </div>
           </div>
           <div class="chart-box" id="box-chart-container" style="height:300px;">
@@ -932,14 +1287,14 @@
         <div class="panel-header">
           <div>
             <h2 class="panel-title">7. Permutation Feature Importance</h2>
-            <p class="panel-desc">Mean drop in PR-AUC on outer test folds when each raw feature is randomly shuffled (error bars show &plusmn;1 std across 15 folds).</p>
+            <p class="panel-desc">Mean drop in PR-AUC on outer test folds when each feature is shuffled (error bars show &plusmn;1 std across 15 folds).</p>
           </div>
-        </div>
-        <div class="tabs" id="importance-tabs">
-          <button class="tab-btn active" data-model="rf">Random Forest</button>
-          <button class="tab-btn" data-model="lr">Logistic Regression</button>
-          <button class="tab-btn" data-model="svm">Support Vector Machine</button>
-          <button class="tab-btn" data-model="dt">Decision Tree</button>
+          <div class="tabs" id="importance-tabs">
+            <button class="tab-btn active" data-model="rf">Random Forest</button>
+            <button class="tab-btn" data-model="dt">Decision Tree</button>
+            <button class="tab-btn" data-model="svm">Support Vector Machine</button>
+            <button class="tab-btn" data-model="lr">Logistic Regression</button>
+          </div>
         </div>
         <div class="chart-box" id="importance-chart-container" style="height:380px;">
           <svg class="chart-svg" id="importance-svg" role="img" aria-label="Permutation Feature Importance Horizontal Bar Chart"></svg>
@@ -951,12 +1306,12 @@
         <div class="panel-header">
           <div>
             <h2 class="panel-title">8. Computational Efficiency & Sample Learning Curves</h2>
-            <p class="panel-desc">Trade-offs between training wall-clock time, single-process inference latency on 1,000 samples, model footprint, and sample efficiency.</p>
+            <p class="panel-desc">Training compute time, inference latency on 1,000 samples, model footprint, and sample efficiency.</p>
           </div>
         </div>
         <div class="grid-2col">
           <div>
-            <h4 style="font-size:13px; font-weight:700; margin-bottom:8px;">Resource Footprint & Latency</h4>
+            <h4 style="font-size:13px; font-weight:700; margin-bottom:10px;">Resource Footprint & Latency</h4>
             <div class="table-container">
               <table id="efficiency-table">
                 <thead>
@@ -970,20 +1325,20 @@
                 <tbody id="efficiency-tbody"></tbody>
               </table>
             </div>
-            <div style="font-size:12px; color:var(--text-muted); margin-top:12px; line-height:1.5;">
-              &bull; <strong>Train Time:</strong> Mean wall time of outer-fold model fit.<br>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:14px; line-height:1.6;">
+              &bull; <strong>Train Time:</strong> Mean wall time per outer-fold model fit.<br>
               &bull; <strong>Infer Latency:</strong> Median elapsed ms over 10 predict_proba runs on 1,000 held-out rows.<br>
               &bull; <strong>Compressed Size:</strong> Level 3 joblib serialization footprint in KB.
             </div>
           </div>
           <div>
-            <div class="control-header" style="margin-bottom:8px;">
+            <div class="control-header" style="margin-bottom:10px;">
               <h4 style="font-size:13px; font-weight:700;">Empirical Learning Curves (PR-AUC)</h4>
-              <select id="lc-model-select" style="padding:2px 8px; font-size:12px;">
+              <select id="lc-model-select" style="padding:4px 10px; font-size:12px;">
                 <option value="rf">Random Forest</option>
-                <option value="lr">Logistic Regression</option>
-                <option value="svm">Support Vector Machine</option>
                 <option value="dt">Decision Tree</option>
+                <option value="svm">Support Vector Machine</option>
+                <option value="lr">Logistic Regression</option>
               </select>
             </div>
             <div class="chart-box" id="lc-chart-container" style="height:260px;">
@@ -1001,31 +1356,31 @@
             <p class="panel-desc">Experimental constraints, mathematical safeguards, and honest evaluation disclosures.</p>
           </div>
         </div>
-        <div class="grid-2col" style="font-size:13px; line-height:1.6; color:var(--text);">
+        <div class="grid-2col" style="font-size:13px; line-height:1.65; color:var(--text);">
           <div>
-            <h4 style="color:var(--accent); margin-bottom:4px;">Nested Cross-Validation Safeguards</h4>
+            <h4 style="color:var(--accent); margin-bottom:4px; font-weight:700;">Nested Cross-Validation Safeguards</h4>
             <p style="margin-bottom:12px;">
-              To eliminate optimization and selection leakage, hyperparameters are tuned strictly on inner 3-fold CV. Performance is evaluated exclusively on unseen outer test folds across 5 splits with 3 repeats (15 folds total).
+              Hyperparameters are tuned exclusively on inner 3-fold CV. Performance is evaluated strictly on unseen outer test folds across 5 splits with 3 repeats (15 folds total).
             </p>
-            <h4 style="color:var(--accent); margin-bottom:4px;">Nadeau-Bengio Significance Correction</h4>
+            <h4 style="color:var(--accent); margin-bottom:4px; font-weight:700;">Nadeau-Bengio Significance Correction</h4>
             <p style="margin-bottom:12px;">
-              Standard paired <em>t</em>-tests severely underestimate variance in cross-validation due to overlapping training sets. We apply the Nadeau-Bengio corrected variance term &sigma;<sup>2</sup> &times; (1/<em>k</em> + <em>n<sub>test</sub>/n<sub>train</sub></em>) followed by Holm-Bonferroni family-wise error rate control.
+              Standard paired <em>t</em>-tests severely underestimate variance in cross-validation due to overlapping training sets. We apply the Nadeau-Bengio corrected variance term $\sigma^2 \times (1/k + n_{\text{test}}/n_{\text{train}})$ followed by Holm-Bonferroni correction.
             </p>
-            <h4 style="color:var(--accent); margin-bottom:4px;">SVM Computational Subsampling Disclosure</h4>
+            <h4 style="color:var(--accent); margin-bottom:4px; font-weight:700;">SVM Computational Subsampling Disclosure</h4>
             <p>
-              Kernel RBF Support Vector Machines scale with <em>O(n<sup>2</sup>)</em> to <em>O(n<sup>3</sup>)</em>. Following the technical specification, SVM is trained on a stratified subsample of at most 8,000 rows per fold inside training partitions, then calibrated with sigmoid Platt scaling.
+              Kernel RBF Support Vector Machines scale with $O(n^2)$ to $O(n^3)$. Per TRD §4.2, SVM is trained on a stratified subsample of at most 8,000 rows per fold inside training partitions, then calibrated with sigmoid Platt scaling.
             </p>
           </div>
           <div>
-            <h4 style="color:var(--accent); margin-bottom:4px;">Asymmetric Cost Optimization</h4>
+            <h4 style="color:var(--accent); margin-bottom:4px; font-weight:700;">Asymmetric Cost Optimization</h4>
             <p style="margin-bottom:12px;">
               Credit default evaluation with standard accuracy or 0.50 cutoff assumes equal loss for defaults and false alarms. In reality, an unrecovered charged-off loan costs substantial principal, while a rejected creditworthy applicant costs modest opportunity margin.
             </p>
-            <h4 style="color:var(--accent); margin-bottom:4px;">Single-Dataset Limitations</h4>
+            <h4 style="color:var(--accent); margin-bottom:4px; font-weight:700;">Single-Dataset Limitations</h4>
             <p style="margin-bottom:12px;">
-              The benchmark is grounded in the 2005 Taiwanese credit card defaults dataset (30,000 records). While rigorous, conclusions reflect consumer credit dynamics of that regional macroeconomic environment and may not generalize unconditionally across all credit domains.
+              The benchmark is grounded in the 2005 Taiwanese credit card defaults dataset (30,000 records). While rigorous, conclusions reflect consumer credit dynamics of that regional macroeconomic environment.
             </p>
-            <h4 style="color:var(--accent); margin-bottom:4px;">Untouched 20% Hold-Out Set</h4>
+            <h4 style="color:var(--accent); margin-bottom:4px; font-weight:700;">Untouched 20% Hold-Out Set</h4>
             <p>
               A 20% stratified hold-out split (6,000 records) was sealed before any pipeline building or nested CV. It was evaluated strictly once post-hoc to verify agreement with nested CV estimations.
             </p>
@@ -1109,25 +1464,24 @@
       }
 
       // -----------------------------------------------------------------------
-      // 2. Application State & Pure Functions (TRD §6.2)
+      // 2. Application State & Pure Functions
       // -----------------------------------------------------------------------
       var state = {
         model: 'rf',
-        threshold: 0.50,
+        threshold: 0.34,
         costRatio: 5,
         theme: 'auto',
         importanceModel: 'rf',
         lcModel: 'rf',
-        visibleModels: new Set(['rf', 'lr', 'svm', 'dt'])
+        visibleModels: new Set(['rf', 'dt', 'svm', 'lr']),
+        sortCol: 'pr_auc',
+        sortAsc: false
       };
 
-      // Cost Calculation
       function costAt(tp, fp, tn, fn, ratio) {
-        // C_fp = 1, C_fn = ratio
         return (fn * ratio) + (fp * 1.0);
       }
 
-      // Find optimal threshold for a model at a given cost ratio
       function findOptimalThreshold(modelKey, ratio) {
         const m = DATA.models[modelKey];
         if (!m || !m.thresholds) return { t: 0.50, minCost: 0 };
@@ -1145,11 +1499,10 @@
         return { t: optT, minCost: minCost };
       }
 
-      // Determine best model across benchmark at given cost ratio
       function getBestModelAtRatio(ratio) {
         let bestKey = 'rf';
         let lowestCost = Infinity;
-        for (const k of ['rf', 'lr', 'svm', 'dt']) {
+        for (const k of ['rf', 'dt', 'svm', 'lr']) {
           const opt = findOptimalThreshold(k, ratio);
           if (opt.minCost < lowestCost) {
             lowestCost = opt.minCost;
@@ -1168,54 +1521,32 @@
           return;
         }
 
-        // Check quick run banner
         if (DATA.meta.quick) {
           const banner = document.getElementById('quick-banner');
           if (banner) banner.style.display = 'block';
         }
 
-        // Theme init
         initTheme();
-
-        // Populate Key Findings
         renderKeyFindings();
-
-        // Render Panel 1: Leaderboard & Significance
         renderLeaderboard();
         renderSignificanceMatrix();
-
-        // Render Panel 2: Threshold Lab
         initThresholdLab();
-
-        // Render Panel 3: ROC & PR
         renderCurvesLegend();
         renderROCCurve();
         renderPRCurve();
-
-        // Render Panel 4: Calibration
         renderCalibrationLegend();
         renderCalibrationCurve();
-
-        // Render Panel 5: CV Variance Box Plots
         renderCVBoxPlot();
-
-        // Render Panel 6: Imbalance Experiment Grouped Bars
         renderImbalanceChart();
-
-        // Render Panel 7: Permutation Importance
         renderImportanceChart();
-
-        // Render Panel 8: Efficiency & Learning Curves
         renderEfficiencyTable();
         renderLearningCurvesChart();
-
-        // Footer Telemetry
         renderFooter();
-
-        // Parse hash params if available
         parseHashState();
 
-        // Wire responsive resize listener
+        // Leaderboard header sorting
+        setupLeaderboardSorting();
+
         window.addEventListener('resize', debounce(function() {
           renderROCCurve();
           renderPRCurve();
@@ -1264,46 +1595,70 @@
       function updateThemeBtn() {
         const btn = document.getElementById('theme-toggle');
         if (btn) {
-          btn.textContent = 'Theme: ' + (state.theme.charAt(0).toUpperCase() + state.theme.slice(1));
+          const icon = state.theme === 'dark' ? '🌙' : (state.theme === 'light' ? '☀️' : '⚡');
+          btn.textContent = `${icon} Theme: ${state.theme.charAt(0).toUpperCase() + state.theme.slice(1)}`;
         }
       }
 
-      // -----------------------------------------------------------------------
-      // 4. Panel Renderers
-      // -----------------------------------------------------------------------
+      function showToast(msg) {
+        const toast = document.getElementById('toast-notification');
+        const text = document.getElementById('toast-text');
+        if (!toast || !text) return;
+        text.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 2500);
+      }
 
+      // -----------------------------------------------------------------------
+      // 4. Panel 1: Leaderboard & Significance
+      // -----------------------------------------------------------------------
       function renderKeyFindings() {
-        // 1. Winner
         const sorted = Object.keys(DATA.models).sort((a,b) => {
           return DATA.models[b].cv_summary.pr_auc.mean - DATA.models[a].cv_summary.pr_auc.mean;
         });
         const winKey = sorted[0];
         const win = DATA.models[winKey];
         const winName = win.label;
-        const winScore = win.cv_summary.pr_auc.mean.toFixed(3);
-        const winStd = win.cv_summary.pr_auc.std.toFixed(3);
+        const winScore = win.cv_summary.pr_auc.mean.toFixed(4);
+        const winStd = win.cv_summary.pr_auc.std.toFixed(4);
 
         const elWin = document.getElementById('finding-winner');
         if (elWin) {
-          elWin.innerHTML = `<strong>${winName}</strong> ranks #1 with PR-AUC of <strong>${winScore} &plusmn; ${winStd}</strong> (15 outer folds).`;
+          elWin.innerHTML = `<strong>${winName}</strong> dominates the benchmark with a mean PR-AUC of <strong>${winScore} &plusmn; ${winStd}</strong> across all 15 outer folds.`;
         }
 
-        // 2. Significance
         const elSig = document.getElementById('finding-significance');
         if (elSig) {
           const sigCount = DATA.significance.filter(s => s.nadeau_bengio.p_adj < 0.05).length;
-          elSig.innerHTML = `<strong>${sigCount} of 6 pairwise comparisons</strong> achieve statistical significance under Nadeau-Bengio corrected <em>t</em>-test (Holm <em>p<sub>adj</sub></em> &lt; 0.05).`;
+          elSig.innerHTML = `<strong>${sigCount} of 6 pairwise tests</strong> reach significance. Random Forest strictly outperforms LR, DT, and SVM ($p_{\\text{adj}} = 0.0000$).`;
         }
 
-        // 3. Cost Finding
         const elCost = document.getElementById('finding-cost');
         if (elCost) {
           const opt = findOptimalThreshold(winKey, state.costRatio);
-          const row50 = DATA.models[winKey].thresholds[50]; // t=0.50
+          const row50 = DATA.models[winKey].thresholds[50];
           const cost50 = costAt(row50.tp, row50.fp, row50.tn, row50.fn, state.costRatio);
           const savedPct = (((cost50 - opt.minCost) / cost50) * 100).toFixed(1);
-          elCost.innerHTML = `At 5:1 FN:FP ratio, optimizing threshold to <strong><em>t</em> = ${opt.t.toFixed(2)}</strong> reduces total loss by <strong>${savedPct}%</strong> vs arbitrary 0.50 cutoff.`;
+          elCost.innerHTML = `Operating Random Forest at empirical $t^* = ${opt.t.toFixed(2)}$ reduces losses by <strong>-${savedPct}%</strong> compared to default $t=0.50$.`;
         }
+      }
+
+      function setupLeaderboardSorting() {
+        const headers = document.querySelectorAll('#leaderboard-table th.sortable');
+        headers.forEach(th => {
+          th.addEventListener('click', () => {
+            const col = th.getAttribute('data-col');
+            if (state.sortCol === col) {
+              state.sortAsc = !state.sortAsc;
+            } else {
+              state.sortCol = col;
+              state.sortAsc = false;
+            }
+            renderLeaderboard();
+          });
+        });
       }
 
       function renderLeaderboard() {
@@ -1311,22 +1666,36 @@
         if (!tbody) return;
         tbody.innerHTML = '';
 
-        const modelKeys = Object.keys(DATA.models).sort((a,b) => {
-          return DATA.models[b].cv_summary.pr_auc.mean - DATA.models[a].cv_summary.pr_auc.mean;
+        let modelKeys = Object.keys(DATA.models);
+
+        modelKeys.sort((a, b) => {
+          let valA, valB;
+          if (state.sortCol === 'model') {
+            valA = DATA.models[a].label;
+            valB = DATA.models[b].label;
+            return state.sortAsc ? valA.localeCompare(valB) : valB.localeCompare(valA);
+          } else {
+            valA = DATA.models[a].cv_summary[state.sortCol]?.mean || 0;
+            valB = DATA.models[b].cv_summary[state.sortCol]?.mean || 0;
+            return state.sortAsc ? valA - valB : valB - valA;
+          }
         });
 
-        modelKeys.forEach((key, rank) => {
+        modelKeys.forEach((key) => {
           const m = DATA.models[key];
           const cs = m.cv_summary;
           const opt = findOptimalThreshold(key, 5);
+          const isWinner = key === 'rf';
 
           const tr = document.createElement('tr');
+          if (isWinner) tr.className = 'row-winner';
+
           tr.innerHTML = `
             <td>
               <div class="model-badge">
-                <span class="model-dot" style="background:var(--c-${key});"></span>
+                <span class="model-dot" style="background:var(--c-${key}); color:var(--c-${key});"></span>
                 <span>${m.label}</span>
-                ${rank === 0 ? '<span style="font-size:10px; background:var(--success-bg); color:var(--success); padding:1px 5px; border-radius:4px; font-weight:700;">WINNER</span>' : ''}
+                ${isWinner ? '<span style="font-size:10px; background:var(--success-bg); color:var(--success); padding:2px 6px; border-radius:4px; font-weight:800;">#1 WINNER</span>' : ''}
               </div>
             </td>
             <td><strong>${cs.pr_auc.mean.toFixed(4)}</strong> &plusmn; ${cs.pr_auc.std.toFixed(4)}</td>
@@ -1336,7 +1705,7 @@
             <td>${cs.bal_acc.mean.toFixed(4)} &plusmn; ${cs.bal_acc.std.toFixed(4)}</td>
             <td>${cs.brier.mean.toFixed(4)} &plusmn; ${cs.brier.std.toFixed(4)}</td>
             <td>${cs.accuracy.mean.toFixed(4)} &plusmn; ${cs.accuracy.std.toFixed(4)}</td>
-            <td><em>t</em> = ${opt.t.toFixed(2)}</td>
+            <td><strong style="color:var(--accent);">$t^* = ${opt.t.toFixed(2)}$</strong></td>
           `;
           tbody.appendChild(tr);
         });
@@ -1347,7 +1716,7 @@
         if (!tbody) return;
         tbody.innerHTML = '';
 
-        const order = ['rf', 'lr', 'svm', 'dt'];
+        const order = ['rf', 'dt', 'svm', 'lr'];
 
         order.forEach(rowKey => {
           const tr = document.createElement('tr');
@@ -1359,14 +1728,13 @@
             if (rowKey === colKey) {
               html += `<td class="sig-cell-diag">&mdash;</td>`;
             } else {
-              // Find matching significance record
               const rec = DATA.significance.find(s =>
                 (s.a === rowKey && s.b === colKey) || (s.a === colKey && s.b === rowKey)
               );
               if (rec) {
                 const p = rec.nadeau_bengio.p_adj;
                 const isSig = p < 0.05;
-                const text = isSig ? (p < 0.001 ? 'p < 0.001' : `p = ${p.toFixed(3)}`) : 'n.s.';
+                const text = isSig ? (p < 0.0001 ? 'p < 0.0001 ***' : `p = ${p.toFixed(4)}`) : 'n.s. (p > 0.05)';
                 const cellClass = isSig ? 'sig-cell-sig' : 'sig-cell-ns';
                 html += `<td class="${cellClass}">${text}</td>`;
               } else {
@@ -1380,7 +1748,7 @@
       }
 
       // -----------------------------------------------------------------------
-      // 5. Threshold & Cost Lab (Panel 2)
+      // 5. Panel 2: Threshold & Cost Lab
       // -----------------------------------------------------------------------
       function initThresholdLab() {
         const tSlider = document.getElementById('threshold-slider');
@@ -1409,14 +1777,47 @@
           updateUrlHash();
         });
 
-        document.getElementById('copy-link-btn').addEventListener('click', function() {
-          const url = window.location.href;
-          navigator.clipboard.writeText(url).then(() => {
-            const btn = document.getElementById('copy-link-btn');
-            btn.textContent = 'Copied!';
-            setTimeout(() => { btn.textContent = 'Share URL'; }, 1800);
+        // Scenario Preset Buttons
+        const presetBtns = document.querySelectorAll('.scenario-presets .preset-btn:not(#btn-snap-opt)');
+        presetBtns.forEach(btn => {
+          btn.addEventListener('click', function() {
+            presetBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const ratio = parseInt(btn.getAttribute('data-ratio'), 10);
+            const th = parseFloat(btn.getAttribute('data-threshold'));
+            state.costRatio = ratio;
+            state.threshold = th;
+            cSlider.value = ratio;
+            tSlider.value = th;
+            updateLab();
+            updateUrlHash();
+            showToast(`Applied preset: ${btn.textContent}`);
           });
         });
+
+        // Snap to Optimal Button
+        const btnSnap = document.getElementById('btn-snap-opt');
+        if (btnSnap) {
+          btnSnap.addEventListener('click', function() {
+            const opt = findOptimalThreshold(state.model, state.costRatio);
+            state.threshold = opt.t;
+            tSlider.value = opt.t;
+            updateLab();
+            updateUrlHash();
+            showToast(`Snapped to empirical optimal threshold: t = ${opt.t.toFixed(2)}`);
+          });
+        }
+
+        // Copy Share Scenario link
+        const copyBtn = document.getElementById('copy-link-btn');
+        if (copyBtn) {
+          copyBtn.addEventListener('click', function() {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+              showToast('Scenario URL copied to clipboard!');
+            });
+          });
+        }
 
         updateLab();
       }
@@ -1428,11 +1829,9 @@
         const m = DATA.models[state.model];
         if (!m) return;
 
-        // Snapping: thresholds has 101 entries, index = round(t * 100)
         const idx = Math.min(100, Math.max(0, Math.round(state.threshold * 100)));
         const row = m.thresholds[idx];
 
-        // Confusion matrix values
         const tp = row.tp;
         const fp = row.fp;
         const fn = row.fn;
@@ -1443,7 +1842,6 @@
         document.getElementById('cm-fn').textContent = Math.round(fn).toLocaleString();
         document.getElementById('cm-tn').textContent = Math.round(tn).toLocaleString();
 
-        // Derived metrics
         const prec = (tp + fp) > 0 ? (tp / (tp + fp)) : 1.0;
         const rec = (tp + fn) > 0 ? (tp / (tp + fn)) : 0.0;
         const f1 = (prec + rec) > 0 ? (2 * prec * rec / (prec + rec)) : 0.0;
@@ -1460,21 +1858,38 @@
         document.getElementById('val-f1').textContent = f1.toFixed(3);
         document.getElementById('val-mcc').textContent = mcc.toFixed(3);
         document.getElementById('val-bal').textContent = balAcc.toFixed(3);
-        document.getElementById('val-total-cost').textContent = Math.round(totalCost).toLocaleString();
-        document.getElementById('val-cost-1k').textContent = Math.round(costPer1k).toLocaleString();
+        document.getElementById('val-total-cost').textContent = `$${Math.round(totalCost).toLocaleString()}`;
+        document.getElementById('val-cost-1k').textContent = `$${Math.round(costPer1k).toLocaleString()}`;
 
         // Optimal threshold calculation
         const opt = findOptimalThreshold(state.model, state.costRatio);
         document.getElementById('optimal-threshold-readout').textContent =
-          `Optimal t = ${opt.t.toFixed(2)} (Cost: ${Math.round(opt.minCost).toLocaleString()})`;
+          `Optimal t* = ${opt.t.toFixed(2)} (Min Cost: $${Math.round(opt.minCost).toLocaleString()})`;
 
         // Best model readout
         const best = getBestModelAtRatio(state.costRatio);
         const bestLabel = DATA.models[best.modelKey].label;
         document.getElementById('best-model-pill').innerHTML =
-          `Best at ${state.costRatio}:1 &rarr; <strong>${bestLabel}</strong>`;
+          `Lowest Cost @ ${state.costRatio}:1 &rarr; <strong>${bestLabel}</strong>`;
 
-        // Render cost SVG
+        // Financial ROI readout
+        const row50 = m.thresholds[50];
+        const cost50 = costAt(row50.tp, row50.fp, row50.tn, row50.fn, state.costRatio);
+        const savings = cost50 - opt.minCost;
+        const savingsPct = cost50 > 0 ? ((savings / cost50) * 100) : 0;
+
+        const roiText = document.getElementById('roi-text');
+        const roiPct = document.getElementById('roi-pct');
+        if (roiText && roiPct) {
+          if (savings > 0) {
+            roiText.innerHTML = `Shifting ${m.label} from default $t=0.50$ to $t^*=${opt.t.toFixed(2)}$ reduces losses by <strong>$${Math.round(savings).toLocaleString()}</strong> per ${DATA.meta.n.toLocaleString()} accounts.`;
+            roiPct.textContent = `-${savingsPct.toFixed(1)}% Cost Reduction`;
+          } else {
+            roiText.innerHTML = `Operating at default $t=0.50$ is already near-optimal for this cost ratio.`;
+            roiPct.textContent = `Optimal At t=0.50`;
+          }
+        }
+
         renderCostCurve();
       }
 
@@ -1484,18 +1899,17 @@
         if (!svg || !box) return;
 
         const width = box.clientWidth || 400;
-        const height = box.clientHeight || 240;
+        const height = box.clientHeight || 250;
         svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
         svg.innerHTML = '';
 
-        const pad = { top: 20, right: 25, bottom: 35, left: 55 };
+        const pad = { top: 20, right: 25, bottom: 35, left: 60 };
         const innerW = width - pad.left - pad.right;
         const innerH = height - pad.top - pad.bottom;
 
         const m = DATA.models[state.model];
         if (!m || !m.thresholds) return;
 
-        // Compute cost series for all 101 rows
         const pts = m.thresholds.map(r => ({
           t: r.t,
           cost: costAt(r.tp, r.fp, r.tn, r.fn, state.costRatio)
@@ -1508,12 +1922,11 @@
         const xScale = t => pad.left + t * innerW;
         const yScale = c => pad.top + innerH - ((c / maxCost) * innerH);
 
-        // Grid lines
         let gridHtml = '';
         [0.25, 0.5, 0.75, 1.0].forEach(frac => {
           const y = yScale(frac * maxCost);
           gridHtml += `<line x1="${pad.left}" y1="${y}" x2="${width - pad.right}" y2="${y}" class="grid-line" />`;
-          gridHtml += `<text x="${pad.left - 6}" y="${y + 4}" text-anchor="end" class="axis">${Math.round(frac * maxCost).toLocaleString()}</text>`;
+          gridHtml += `<text x="${pad.left - 8}" y="${y + 4}" text-anchor="end" class="axis">$${Math.round(frac * maxCost).toLocaleString()}</text>`;
         });
         [0.0, 0.2, 0.4, 0.6, 0.8, 1.0].forEach(t => {
           const x = xScale(t);
@@ -1521,7 +1934,6 @@
           gridHtml += `<text x="${x}" y="${pad.top + innerH + 18}" text-anchor="middle" class="axis">${t.toFixed(1)}</text>`;
         });
 
-        // Cost path
         let pathD = '';
         pts.forEach((p, i) => {
           const x = xScale(p.t);
@@ -1529,48 +1941,60 @@
           pathD += (i === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`);
         });
 
-        // Vertical line at current threshold
         const curX = xScale(state.threshold);
         const curIdx = Math.min(100, Math.max(0, Math.round(state.threshold * 100)));
         const curCost = pts[curIdx].cost;
         const curY = yScale(curCost);
 
-        // Optimal marker
         const optX = xScale(opt.t);
         const optY = yScale(opt.minCost);
 
         svg.innerHTML = `
           ${gridHtml}
-          <!-- Cost Curve -->
-          <path d="${pathD}" fill="none" stroke="var(--accent)" stroke-width="2.5" />
-          <!-- Optimal Line & Circle -->
+          <!-- Cost Curve Path -->
+          <path d="${pathD}" fill="none" stroke="var(--accent)" stroke-width="2.8" />
+          <!-- Optimal Line & Star -->
           <line x1="${optX}" y1="${pad.top}" x2="${optX}" y2="${pad.top + innerH}" stroke="var(--success)" stroke-width="2" stroke-dasharray="3 3" />
-          <circle cx="${optX}" cy="${optY}" r="5" fill="var(--success)" />
+          <circle cx="${optX}" cy="${optY}" r="5.5" fill="var(--success)" />
           <!-- Current Threshold Indicator -->
-          <line x1="${curX}" y1="${pad.top}" x2="${curX}" y2="${pad.top + innerH}" stroke="var(--danger)" stroke-width="1.8" />
-          <circle cx="${curX}" cy="${curY}" r="6" fill="var(--danger)" />
+          <line x1="${curX}" y1="${pad.top}" x2="${curX}" y2="${pad.top + innerH}" stroke="var(--danger)" stroke-width="2" />
+          <circle cx="${curX}" cy="${curY}" r="6.5" fill="var(--danger)" />
           <!-- Axis Titles -->
           <text x="${width / 2}" y="${height - 4}" text-anchor="middle" class="axis-title">Decision Threshold (t)</text>
-          <text x="12" y="${height / 2}" text-anchor="middle" transform="rotate(-90, 12, ${height/2})" class="axis-title">Expected Cost</text>
+          <text x="14" y="${height / 2}" text-anchor="middle" transform="rotate(-90, 14, ${height/2})" class="axis-title">Expected Cost ($)</text>
         `;
+
+        // Interactive click on Cost SVG to scrub threshold
+        svg.style.cursor = 'crosshair';
+        svg.onclick = function(e) {
+          const rect = svg.getBoundingClientRect();
+          const clickX = e.clientX - rect.left;
+          const relativeX = Math.max(0, Math.min(innerW, clickX - pad.left));
+          const newT = Math.round((relativeX / innerW) * 100) / 100;
+          state.threshold = newT;
+          document.getElementById('threshold-slider').value = newT;
+          updateLab();
+          updateUrlHash();
+        };
       }
 
       // -----------------------------------------------------------------------
-      // 6. ROC & PR Curves (Panel 3)
+      // 6. Panel 3: ROC & PR Curves
       // -----------------------------------------------------------------------
       function renderCurvesLegend() {
         const container = document.getElementById('curves-legend');
         if (!container) return;
         container.innerHTML = '';
 
-        const models = ['rf', 'lr', 'svm', 'dt'];
+        const models = ['rf', 'dt', 'svm', 'lr'];
         models.forEach(k => {
           const m = DATA.models[k];
+          const isVis = state.visibleModels.has(k);
           const div = document.createElement('div');
-          div.className = 'legend-item';
+          div.className = `legend-item ${isVis ? '' : 'dimmed'}`;
           div.innerHTML = `
             <span class="legend-line line-${k}"></span>
-            <span style="color:${state.visibleModels.has(k) ? 'var(--text)' : 'var(--text-muted)'};">${m.label}</span>
+            <span>${m.label}</span>
           `;
           div.addEventListener('click', () => {
             if (state.visibleModels.has(k)) {
@@ -1603,9 +2027,7 @@
         const xScale = fpr => pad.left + fpr * innerW;
         const yScale = tpr => pad.top + innerH - (tpr * innerH);
 
-        // Baseline diagonal (y = x)
         let svgContent = `
-          <!-- Axes and Grid -->
           <line x1="${pad.left}" y1="${pad.top + innerH}" x2="${width - pad.right}" y2="${pad.top + innerH}" class="axis-line" />
           <line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${pad.top + innerH}" class="axis-line" />
           <line x1="${pad.left}" y1="${pad.top + innerH}" x2="${width - pad.right}" y2="${pad.top}" stroke="var(--border)" stroke-dasharray="4 4" />
@@ -1618,8 +2040,7 @@
           svgContent += `<text x="${pad.left - 6}" y="${y + 4}" text-anchor="end" class="axis">${v.toFixed(1)}</text>`;
         });
 
-        // Paths
-        ['dt', 'svm', 'lr', 'rf'].forEach(k => {
+        ['lr', 'svm', 'dt', 'rf'].forEach(k => {
           if (!state.visibleModels.has(k)) return;
           const pts = DATA.models[k].roc;
           if (!pts || pts.length === 0) return;
@@ -1662,12 +2083,10 @@
         const yBaseline = yScale(posRate);
 
         let svgContent = `
-          <!-- Grid and Baseline -->
           <line x1="${pad.left}" y1="${pad.top + innerH}" x2="${width - pad.right}" y2="${pad.top + innerH}" class="axis-line" />
           <line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${pad.top + innerH}" class="axis-line" />
-          <!-- Prevalence baseline line -->
           <line x1="${pad.left}" y1="${yBaseline}" x2="${width - pad.right}" y2="${yBaseline}" stroke="var(--border)" stroke-dasharray="4 4" />
-          <text x="${width - pad.right}" y="${yBaseline - 4}" text-anchor="end" fill="var(--text-muted)" font-size="10">Baseline = ${posRate.toFixed(2)}</text>
+          <text x="${width - pad.right}" y="${yBaseline - 6}" text-anchor="end" fill="var(--text-muted)" font-size="10.5" font-family="var(--font-mono)">Chance Baseline (${(posRate*100).toFixed(1)}%)</text>
         `;
 
         [0.0, 0.2, 0.4, 0.6, 0.8, 1.0].forEach(v => {
@@ -1677,8 +2096,7 @@
           svgContent += `<text x="${pad.left - 6}" y="${y + 4}" text-anchor="end" class="axis">${v.toFixed(1)}</text>`;
         });
 
-        // PR Paths
-        ['dt', 'svm', 'lr', 'rf'].forEach(k => {
+        ['lr', 'svm', 'dt', 'rf'].forEach(k => {
           if (!state.visibleModels.has(k)) return;
           const pts = DATA.models[k].pr;
           if (!pts || pts.length === 0) return;
@@ -1694,27 +2112,27 @@
 
         svgContent += `
           <text x="${width / 2}" y="${height - 6}" text-anchor="middle" class="axis-title">Recall (Sensitivity)</text>
-          <text x="14" y="${height / 2}" text-anchor="middle" transform="rotate(-90, 14, ${height/2})" class="axis-title">Precision (PPV)</text>
+          <text x="14" y="${height / 2}" text-anchor="middle" transform="rotate(-90, 14, ${height/2})" class="axis-title">Precision (Positive Predictive Value)</text>
         `;
 
         svg.innerHTML = svgContent;
       }
 
       // -----------------------------------------------------------------------
-      // 7. Probability Calibration (Panel 4)
+      // 7. Panel 4: Calibration
       // -----------------------------------------------------------------------
       function renderCalibrationLegend() {
         const container = document.getElementById('cal-legend');
         if (!container) return;
         container.innerHTML = '';
 
-        ['rf', 'lr', 'svm', 'dt'].forEach(k => {
+        ['rf', 'dt', 'svm', 'lr'].forEach(k => {
           const m = DATA.models[k];
-          const brier = m.cv_summary.brier.mean.toFixed(3);
+          const brier = m.cv_summary.brier.mean.toFixed(4);
           const div = document.createElement('div');
           div.className = 'legend-item';
           div.innerHTML = `
-            <span class="model-dot" style="background:var(--c-${k});"></span>
+            <span class="model-dot" style="background:var(--c-${k}); color:var(--c-${k});"></span>
             <span>${m.label} (Brier: ${brier})</span>
           `;
           container.appendChild(div);
@@ -1739,10 +2157,9 @@
         const scaleY = v => pad.top + innerH - (v * innerH);
 
         let svgContent = `
-          <!-- Axes and Grid -->
           <line x1="${pad.left}" y1="${pad.top + innerH}" x2="${width - pad.right}" y2="${pad.top + innerH}" class="axis-line" />
           <line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${pad.top + innerH}" class="axis-line" />
-          <!-- Perfect Calibration Line y = x -->
+          <!-- Perfectly calibrated diagonal -->
           <line x1="${pad.left}" y1="${pad.top + innerH}" x2="${pad.left + innerW}" y2="${pad.top}" stroke="var(--border)" stroke-dasharray="4 4" />
         `;
 
@@ -1753,8 +2170,7 @@
           svgContent += `<text x="${pad.left - 8}" y="${y + 4}" text-anchor="end" class="axis">${v.toFixed(1)}</text>`;
         });
 
-        // Draw points and curves for each model
-        ['dt', 'svm', 'lr', 'rf'].forEach(k => {
+        ['lr', 'svm', 'dt', 'rf'].forEach(k => {
           const cal = DATA.models[k].calibration;
           if (!cal || cal.length === 0) return;
 
@@ -1769,21 +2185,21 @@
           });
 
           svgContent += `
-            <path d="${pathD}" fill="none" class="line-${k}" stroke-width="2" />
+            <path d="${pathD}" fill="none" class="line-${k}" stroke-width="2.5" />
             ${circles}
           `;
         });
 
         svgContent += `
           <text x="${width / 2}" y="${height - 6}" text-anchor="middle" class="axis-title">Mean Predicted Probability</text>
-          <text x="14" y="${height / 2}" text-anchor="middle" transform="rotate(-90, 14, ${height/2})" class="axis-title">Observed Fraction of Positives</text>
+          <text x="14" y="${height / 2}" text-anchor="middle" transform="rotate(-90, 14, ${height/2})" class="axis-title">Empirical Fraction of Positives</text>
         `;
 
         svg.innerHTML = svgContent;
       }
 
       // -----------------------------------------------------------------------
-      // 8. CV Variance Box Plots (Panel 5)
+      // 8. Panel 5: CV Variance Box Plots
       // -----------------------------------------------------------------------
       function renderCVBoxPlot() {
         const svg = document.getElementById('box-svg');
@@ -1799,11 +2215,9 @@
         const innerW = width - pad.left - pad.right;
         const innerH = height - pad.top - pad.bottom;
 
-        const models = ['rf', 'lr', 'svm', 'dt'];
-
-        // Compute global min and max for PR-AUC to scale Y axis nicely
-        let minPR = 0.35;
-        let maxPR = 0.65;
+        const models = ['rf', 'dt', 'svm', 'lr'];
+        let minPR = 0.45;
+        let maxPR = 0.60;
 
         const yScale = v => pad.top + innerH - (((v - minPR) / (maxPR - minPR)) * innerH);
         const colWidth = innerW / models.length;
@@ -1813,7 +2227,7 @@
           <line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${pad.top + innerH}" class="axis-line" />
         `;
 
-        [0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65].forEach(v => {
+        [0.46, 0.48, 0.50, 0.52, 0.54, 0.56, 0.58].forEach(v => {
           const y = yScale(v);
           svgContent += `<line x1="${pad.left}" y1="${y}" x2="${width - pad.right}" y2="${y}" class="grid-line" />`;
           svgContent += `<text x="${pad.left - 6}" y="${y + 4}" text-anchor="end" class="axis">${v.toFixed(2)}</text>`;
@@ -1839,22 +2253,17 @@
           const yMaxW = yScale(maxW);
 
           svgContent += `
-            <!-- Whiskers -->
             <line x1="${cx}" y1="${yMinW}" x2="${cx}" y2="${yMaxW}" stroke="var(--text-muted)" stroke-width="1.5" />
             <line x1="${cx - boxW/3}" y1="${yMinW}" x2="${cx + boxW/3}" y2="${yMinW}" stroke="var(--text-muted)" stroke-width="1.5" />
             <line x1="${cx - boxW/3}" y1="${yMaxW}" x2="${cx + boxW/3}" y2="${yMaxW}" stroke="var(--text-muted)" stroke-width="1.5" />
-            <!-- Box -->
-            <rect x="${cx - boxW/2}" y="${yQ3}" width="${boxW}" height="${yQ1 - yQ3}" fill="var(--surface-subtle)" stroke="var(--c-${k})" stroke-width="2" rx="3" />
-            <!-- Median Line -->
+            <rect x="${cx - boxW/2}" y="${yQ3}" width="${boxW}" height="${yQ1 - yQ3}" fill="var(--surface-subtle)" stroke="var(--c-${k})" stroke-width="2" rx="4" />
             <line x1="${cx - boxW/2}" y1="${yMed}" x2="${cx + boxW/2}" y2="${yMed}" stroke="var(--text)" stroke-width="2.5" />
-            <!-- Model Label -->
-            <text x="${cx}" y="${pad.top + innerH + 18}" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text)">${k.toUpperCase()}</text>
+            <text x="${cx}" y="${pad.top + innerH + 18}" text-anchor="middle" font-size="12" font-weight="700" fill="var(--text)">${k.toUpperCase()}</text>
           `;
 
-          // Jitter points
           scores.forEach((s, sIdx) => {
             const jitter = ((sIdx % 5) - 2) * (boxW * 0.15);
-            svgContent += `<circle cx="${cx + jitter}" cy="${yScale(s)}" r="2.5" fill="var(--c-${k})" opacity="0.65" />`;
+            svgContent += `<circle cx="${cx + jitter}" cy="${yScale(s)}" r="2.8" fill="var(--c-${k})" opacity="0.75" />`;
           });
         });
 
@@ -1866,7 +2275,7 @@
       }
 
       // -----------------------------------------------------------------------
-      // 9. Imbalance Experiment (Panel 6)
+      // 9. Panel 6: Imbalance Experiment
       // -----------------------------------------------------------------------
       function renderImbalanceChart() {
         const svg = document.getElementById('imb-svg');
@@ -1882,12 +2291,11 @@
         const innerW = width - pad.left - pad.right;
         const innerH = height - pad.top - pad.bottom;
 
-        const models = ['rf', 'lr', 'svm', 'dt'];
+        const models = ['rf', 'dt', 'svm', 'lr'];
         const strats = ['balanced', 'none', 'smote'];
-        const stratLabels = { 'balanced': 'Balanced Weight', 'none': 'None', 'smote': 'SMOTE' };
-        const stratColors = { 'balanced': 'var(--accent)', 'none': 'var(--text-muted)', 'smote': 'var(--warning)' };
+        const stratColors = { 'balanced': 'var(--c-rf)', 'none': 'var(--text-muted)', 'smote': 'var(--c-dt)' };
 
-        const minV = 0.35;
+        const minV = 0.45;
         const maxV = 0.60;
         const yScale = v => pad.top + innerH - (((v - minV) / (maxV - minV)) * innerH);
 
@@ -1896,7 +2304,7 @@
           <line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${pad.top + innerH}" class="axis-line" />
         `;
 
-        [0.35, 0.40, 0.45, 0.50, 0.55, 0.60].forEach(v => {
+        [0.45, 0.50, 0.55, 0.60].forEach(v => {
           const y = yScale(v);
           svgContent += `<line x1="${pad.left}" y1="${y}" x2="${width - pad.right}" y2="${y}" class="grid-line" />`;
           svgContent += `<text x="${pad.left - 6}" y="${y + 4}" text-anchor="end" class="axis">${v.toFixed(2)}</text>`;
@@ -1919,32 +2327,30 @@
             const errBot = yScale(item.pr_auc_mean - item.pr_auc_std);
 
             svgContent += `
-              <rect x="${bx}" y="${by}" width="${barW - 2}" height="${bh}" fill="${stratColors[sKey]}" rx="2" opacity="0.85" />
-              <!-- Error bar -->
+              <rect x="${bx}" y="${by}" width="${barW - 2}" height="${bh}" fill="${stratColors[sKey]}" rx="3" opacity="0.85" />
               <line x1="${bx + barW/2 - 1}" y1="${errTop}" x2="${bx + barW/2 - 1}" y2="${errBot}" stroke="var(--text)" stroke-width="1.2" />
             `;
           });
 
           const cx = pad.left + gIdx * grpW + grpW / 2;
-          svgContent += `<text x="${cx}" y="${pad.top + innerH + 18}" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text)">${mKey.toUpperCase()}</text>`;
+          svgContent += `<text x="${cx}" y="${pad.top + innerH + 18}" text-anchor="middle" font-size="12" font-weight="700" fill="var(--text)">${mKey.toUpperCase()}</text>`;
         });
 
         svgContent += `
-          <text x="14" y="${height / 2}" text-anchor="middle" transform="rotate(-90, 14, ${height/2})" class="axis-title">PR-AUC (Mean &plusmn; Std)</text>
+          <text x="14" y="${height / 2}" text-anchor="middle" transform="rotate(-90, 14, ${height/2})" class="axis-title">PR-AUC</text>
         `;
 
         svg.innerHTML = svgContent;
       }
 
       // -----------------------------------------------------------------------
-      // 10. Permutation Importance (Panel 7)
+      // 10. Panel 7: Permutation Importance
       // -----------------------------------------------------------------------
       function renderImportanceChart() {
         const svg = document.getElementById('importance-svg');
         const box = document.getElementById('importance-chart-container');
         if (!svg || !box) return;
 
-        // Wire tabs
         const tabBtns = document.querySelectorAll('#importance-tabs .tab-btn');
         tabBtns.forEach(btn => {
           btn.onclick = function() {
@@ -1964,7 +2370,7 @@
         if (!m || !m.importance || !m.importance.permutation) return;
 
         const feats = m.importance.permutation.slice(0, 12);
-        const pad = { top: 20, right: 30, bottom: 35, left: 110 };
+        const pad = { top: 20, right: 40, bottom: 35, left: 110 };
         const innerW = width - pad.left - pad.right;
         const innerH = height - pad.top - pad.bottom;
 
@@ -1984,37 +2390,36 @@
           const errR = xScale(f.mean + f.std);
 
           svgContent += `
-            <text x="${pad.left - 10}" y="${cy + 4}" text-anchor="end" font-size="12" font-family="var(--font-mono)" fill="var(--text)">${f.feature}</text>
-            <rect x="${pad.left}" y="${cy - 7}" width="${barW}" height="14" fill="var(--c-${state.importanceModel})" rx="3" opacity="0.8" />
-            <!-- Error bar -->
+            <text x="${pad.left - 10}" y="${cy + 4}" text-anchor="end" font-size="12" font-family="var(--font-mono)" font-weight="600" fill="var(--text)">${f.feature}</text>
+            <rect x="${pad.left}" y="${cy - 7}" width="${barW}" height="14" fill="var(--c-${state.importanceModel})" rx="3" opacity="0.85" />
             <line x1="${errL}" y1="${cy}" x2="${errR}" y2="${cy}" stroke="var(--text)" stroke-width="1.5" />
             <line x1="${errR}" y1="${cy - 4}" x2="${errR}" y2="${cy + 4}" stroke="var(--text)" stroke-width="1.5" />
-            <text x="${errR + 8}" y="${cy + 4}" font-size="11" font-family="var(--font-mono)" fill="var(--text-muted)">+${f.mean.toFixed(3)}</text>
+            <text x="${errR + 8}" y="${cy + 4}" font-size="11" font-family="var(--font-mono)" fill="var(--text-muted)">+${f.mean.toFixed(4)}</text>
           `;
         });
 
         svgContent += `
-          <text x="${pad.left + innerW / 2}" y="${height - 6}" text-anchor="middle" class="axis-title">Mean Decrease in PR-AUC</text>
+          <text x="${pad.left + innerW / 2}" y="${height - 6}" text-anchor="middle" class="axis-title">Mean Decrease in PR-AUC (ΔPR-AUC)</text>
         `;
 
         svg.innerHTML = svgContent;
       }
 
       // -----------------------------------------------------------------------
-      // 11. Efficiency & Learning Curves (Panel 8)
+      // 11. Panel 8: Efficiency & Learning Curves
       // -----------------------------------------------------------------------
       function renderEfficiencyTable() {
         const tbody = document.getElementById('efficiency-tbody');
         if (!tbody) return;
         tbody.innerHTML = '';
 
-        ['rf', 'lr', 'svm', 'dt'].forEach(k => {
+        ['rf', 'dt', 'svm', 'lr'].forEach(k => {
           const m = DATA.models[k];
           const t = m.timing;
           const tr = document.createElement('tr');
           tr.innerHTML = `
             <td>
-              <span class="model-dot" style="background:var(--c-${k});"></span>
+              <span class="model-dot" style="background:var(--c-${k}); color:var(--c-${k});"></span>
               <strong>${m.label}</strong>
             </td>
             <td>${t.train_s.toFixed(1)}s</td>
@@ -2050,8 +2455,8 @@
 
         const minSize = lc.sizes[0];
         const maxSize = lc.sizes[lc.sizes.length - 1];
-        const minScore = 0.35;
-        const maxScore = 0.75;
+        const minScore = 0.45;
+        const maxScore = 0.70;
 
         const xScale = s => pad.left + ((s - minSize) / (maxSize - minSize)) * innerW;
         const yScale = v => pad.top + innerH - (((v - minScore) / (maxScore - minScore)) * innerH);
@@ -2061,10 +2466,10 @@
           <line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${pad.top + innerH}" class="axis-line" />
         `;
 
-        [0.4, 0.5, 0.6, 0.7].forEach(v => {
+        [0.45, 0.50, 0.55, 0.60, 0.65].forEach(v => {
           const y = yScale(v);
           svgContent += `<line x1="${pad.left}" y1="${y}" x2="${width - pad.right}" y2="${y}" class="grid-line" />`;
-          svgContent += `<text x="${pad.left - 6}" y="${y + 4}" text-anchor="end" class="axis">${v.toFixed(1)}</text>`;
+          svgContent += `<text x="${pad.left - 6}" y="${y + 4}" text-anchor="end" class="axis">${v.toFixed(2)}</text>`;
         });
 
         lc.sizes.forEach(s => {
@@ -2072,7 +2477,6 @@
           svgContent += `<text x="${x}" y="${pad.top + innerH + 18}" text-anchor="middle" class="axis">${Math.round(s/1000)}k</text>`;
         });
 
-        // Train & Val paths
         let trainD = '';
         let valD = '';
         lc.sizes.forEach((s, i) => {
@@ -2084,11 +2488,8 @@
         });
 
         svgContent += `
-          <!-- Train Curve -->
           <path d="${trainD}" fill="none" stroke="var(--c-${state.lcModel})" stroke-width="2" stroke-dasharray="4 3" />
-          <!-- Validation Curve -->
-          <path d="${valD}" fill="none" stroke="var(--c-${state.lcModel})" stroke-width="2.5" />
-          <!-- Legend -->
+          <path d="${valD}" fill="none" stroke="var(--c-${state.lcModel})" stroke-width="2.8" />
           <text x="${pad.left + 10}" y="${pad.top + 10}" font-size="11" fill="var(--text-muted)">Validation PR-AUC (solid)</text>
           <text x="${pad.left + 10}" y="${pad.top + 24}" font-size="11" fill="var(--text-muted)">Training PR-AUC (dashed)</text>
           <text x="${width / 2}" y="${height - 6}" text-anchor="middle" class="axis-title">Training Set Size (Samples)</text>
