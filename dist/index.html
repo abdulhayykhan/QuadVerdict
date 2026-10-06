@@ -1,4 +1,4 @@
-<!-- built: 2026-10-06T09:50:41.049147+00:00 results-sha256: 9e072cb5a35a7d55056410e734f099ceeaf09c0b7da206bca1e65ec63938e2fe -->
+<!-- built: 2026-10-06T16:24:04.201288+00:00 results-sha256: 9e072cb5a35a7d55056410e734f099ceeaf09c0b7da206bca1e65ec63938e2fe -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -426,6 +426,7 @@
     .table-container {
       width: 100%;
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
       border-radius: var(--radius);
       border: 1px solid var(--border);
     }
@@ -435,6 +436,26 @@
       border-collapse: collapse;
       font-size: 13px;
       text-align: left;
+    }
+
+    .table-container th:first-child,
+    .table-container td:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background: var(--surface-subtle);
+    }
+    .table-container th:first-child {
+      z-index: 3;
+    }
+    tr:hover td:first-child {
+      background: var(--surface-hover);
+    }
+    tr.row-winner td:first-child {
+      background: rgba(0, 158, 115, 0.16);
+    }
+    tr.row-winner:hover td:first-child {
+      background: rgba(0, 158, 115, 0.22);
     }
 
     th {
@@ -941,6 +962,246 @@
       clip: rect(0, 0, 0, 0);
       white-space: nowrap;
       border: 0;
+    }
+
+    /* -------------------------------------------------------------------------
+       Comprehensive Responsive Design (Mobile, Tablet, Desktop, Ultrawide)
+       ------------------------------------------------------------------------- */
+
+    /* Large Tablets & Small Laptops (max-width: 1024px) */
+    @media (max-width: 1024px) {
+      .container {
+        padding: 0 18px;
+      }
+      .panel {
+        padding: 20px 18px;
+        margin-bottom: 22px;
+      }
+      .key-findings-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 14px;
+      }
+      .chart-box {
+        height: 290px;
+      }
+    }
+
+    /* Tablets & Narrow Laptops (max-width: 860px) */
+    @media (max-width: 860px) {
+      .grid-2col {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .header-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+      .header-title-group {
+        justify-content: space-between;
+      }
+      .header-controls {
+        justify-content: space-between;
+        width: 100%;
+      }
+      .nav-pills {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        max-width: 100%;
+      }
+      .nav-pills::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    /* Mobile Devices (max-width: 640px) */
+    @media (max-width: 640px) {
+      body {
+        font-size: 13.5px;
+        padding-bottom: 60px;
+      }
+      .container {
+        padding: 0 12px;
+      }
+      header {
+        padding: 10px 0;
+        margin-bottom: 16px;
+      }
+      .header-title-group h1 {
+        font-size: 18px;
+      }
+      .header-thesis {
+        font-size: 12px;
+        line-height: 1.4;
+      }
+      .header-controls {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .nav-pill {
+        font-size: 11.5px;
+        padding: 4px 8px;
+        white-space: nowrap;
+      }
+      button, select {
+        font-size: 12px;
+        padding: 6px 10px;
+      }
+      .panel {
+        padding: 16px 12px;
+        border-radius: var(--radius);
+        margin-bottom: 18px;
+      }
+      .panel-header {
+        margin-bottom: 14px;
+        padding-bottom: 10px;
+      }
+      .panel-title {
+        font-size: 16.5px;
+      }
+      .panel-desc {
+        font-size: 12px;
+      }
+
+      /* Key Findings */
+      .key-findings-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+      .finding-card {
+        padding: 14px 12px;
+      }
+      .finding-text {
+        font-size: 13px;
+      }
+
+      /* Scenario Presets */
+      .scenario-presets {
+        gap: 6px;
+      }
+      .preset-label {
+        width: 100%;
+        margin-bottom: 2px;
+      }
+      .preset-btn {
+        font-size: 11px;
+        padding: 5px 9px;
+      }
+
+      /* Lab Controls */
+      .lab-controls {
+        grid-template-columns: 1fr;
+        padding: 14px 12px;
+        gap: 14px;
+      }
+
+      /* Financial Banner */
+      .financial-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 12px 14px;
+      }
+      .financial-banner-highlight {
+        font-size: 15px;
+      }
+
+      /* Confusion Matrix */
+      .cm-wrapper {
+        gap: 6px;
+        max-width: 100%;
+      }
+      .cm-cell {
+        padding: 10px 6px;
+      }
+      .cm-val {
+        font-size: 16px;
+      }
+      .cm-sub {
+        font-size: 9.5px;
+      }
+      .cm-header-col, .cm-header-row {
+        font-size: 9.5px;
+      }
+
+      /* Metrics Ribbon */
+      .metrics-ribbon {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      .metric-chip {
+        padding: 10px 8px;
+      }
+      .metric-chip-value {
+        font-size: 16px;
+      }
+
+      /* Charts */
+      .chart-box {
+        height: 260px;
+      }
+      #cal-chart-container {
+        height: 290px !important;
+      }
+      #importance-chart-container {
+        height: 360px !important;
+      }
+
+      /* Tabs */
+      .tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        white-space: nowrap;
+        gap: 4px;
+      }
+      .tabs::-webkit-scrollbar {
+        display: none;
+      }
+      .tab-btn {
+        font-size: 11.5px;
+        padding: 5px 10px;
+        flex-shrink: 0;
+      }
+
+      /* Tables on Mobile */
+      th, td {
+        padding: 9px 10px;
+        font-size: 12px;
+      }
+
+      /* Footer */
+      footer {
+        padding: 28px 0;
+        margin-top: 32px;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+    }
+
+    /* Smallest Mobile Displays (max-width: 360px) */
+    @media (max-width: 360px) {
+      .header-title-group h1 {
+        font-size: 16px;
+      }
+      .header-badge {
+        font-size: 10px;
+        padding: 2px 6px;
+      }
+      .cm-val {
+        font-size: 14px;
+      }
+      .metric-chip-value {
+        font-size: 14.5px;
+      }
+      .preset-btn {
+        font-size: 10.5px;
+        padding: 4px 7px;
+      }
     }
   </style>
 </head>
@@ -1975,15 +2236,34 @@
         `;
 
         svg.style.cursor = 'crosshair';
-        svg.onclick = function(e) {
+
+        function scrubThreshold(clientX) {
           const rect = svg.getBoundingClientRect();
-          const clickX = e.clientX - rect.left;
+          const clickX = clientX - rect.left;
           const relativeX = Math.max(0, Math.min(innerW, clickX - pad.left));
           const newT = Math.round((relativeX / innerW) * 100) / 100;
           state.threshold = newT;
-          document.getElementById('threshold-slider').value = newT;
+          const slider = document.getElementById('threshold-slider');
+          if (slider) slider.value = newT;
           updateLab();
           updateUrlHash();
+        }
+
+        svg.onclick = function(e) {
+          scrubThreshold(e.clientX);
+        };
+
+        svg.ontouchstart = function(e) {
+          if (e.touches && e.touches[0]) {
+            scrubThreshold(e.touches[0].clientX);
+          }
+        };
+
+        svg.ontouchmove = function(e) {
+          if (e.touches && e.touches[0]) {
+            e.preventDefault();
+            scrubThreshold(e.touches[0].clientX);
+          }
         };
       }
 
@@ -2386,8 +2666,9 @@
         if (!m || !m.importance || !m.importance.permutation) return;
 
         const feats = m.importance.permutation.slice(0, 10);
-        // Generous right padding (110px) so labels like +0.2156 never clip
-        const pad = { top: 20, right: 110, bottom: 40, left: 115 };
+        const isMobile = width < 520;
+        // Responsive padding adapting to screen width
+        const pad = { top: 20, right: isMobile ? 65 : 110, bottom: 40, left: isMobile ? 85 : 115 };
         const innerW = width - pad.left - pad.right;
         const innerH = height - pad.top - pad.bottom;
 
@@ -2415,15 +2696,15 @@
 
           // Alternating row background for clean scannability
           if (idx % 2 === 0) {
-            svgContent += `<rect x="${pad.left}" y="${cy - rowH/2}" width="${innerW + 90}" height="${rowH}" fill="var(--surface-subtle)" opacity="0.3" />`;
+            svgContent += `<rect x="${pad.left}" y="${cy - rowH/2}" width="${innerW + (isMobile ? 50 : 90)}" height="${rowH}" fill="var(--surface-subtle)" opacity="0.3" />`;
           }
 
           svgContent += `
-            <text x="${pad.left - 10}" y="${cy + 4}" text-anchor="end" font-size="12" font-family="var(--font-mono)" font-weight="${isDominant ? '800' : '600'}" fill="${isDominant ? 'var(--accent)' : 'var(--text)'}">${f.feature}</text>
+            <text x="${pad.left - (isMobile ? 6 : 10)}" y="${cy + 4}" text-anchor="end" font-size="${isMobile ? '10.5' : '12'}" font-family="var(--font-mono)" font-weight="${isDominant ? '800' : '600'}" fill="${isDominant ? 'var(--accent)' : 'var(--text)'}">${f.feature}</text>
             <rect x="${pad.left}" y="${cy - 7}" width="${barW}" height="14" fill="var(--c-${state.importanceModel})" rx="3" opacity="${isDominant ? '1.0' : '0.85'}" />
             <line x1="${errL}" y1="${cy}" x2="${errR}" y2="${cy}" stroke="var(--text)" stroke-width="1.5" />
             <line x1="${errR}" y1="${cy - 4}" x2="${errR}" y2="${cy + 4}" stroke="var(--text)" stroke-width="1.5" />
-            <text x="${errR + 8}" y="${cy + 4}" font-size="11.5" font-family="var(--font-mono)" font-weight="${isDominant ? '700' : '500'}" fill="${isDominant ? 'var(--success)' : 'var(--text-muted)'}">+${f.mean.toFixed(4)}${isDominant ? ' (Top Signal)' : ''}</text>
+            <text x="${errR + (isMobile ? 5 : 8)}" y="${cy + 4}" font-size="${isMobile ? '10' : '11.5'}" font-family="var(--font-mono)" font-weight="${isDominant ? '700' : '500'}" fill="${isDominant ? 'var(--success)' : 'var(--text-muted)'}">+${f.mean.toFixed(isMobile ? 3 : 4)}${isDominant && !isMobile ? ' (Top Signal)' : ''}</text>
           `;
         });
 
