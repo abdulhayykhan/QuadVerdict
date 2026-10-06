@@ -15,7 +15,7 @@ The central thesis of QuadVerdict is that real-world credit risk decisions shoul
 
 An interactive, zero-dependency client dashboard is compiled directly into a single self-contained HTML application (`dist/index.html`):
 
-- **Live Deployment:** [quadverdict.vercel.app](https://quadverdict.vercel.app) *(or open `dist/index.html` locally via `file://`)*
+- **Live Deployment:** [quad-verdict.vercel.app](https://quad-verdict.vercel.app/) *(or open `dist/index.html` locally via `file://`)*
 - **Hero Interactive Cost Lab:** Dynamically adjust the classification threshold $t \in [0, 1]$ and loss ratio $C_{\text{FN}} : C_{\text{FP}} \in [1, 50]$ to observe real-time confusion matrices, precision/recall trade-offs, and empirical minimum-cost operating points.
 - **Embedded Real Data:** Injected from canonical benchmark output (`results/results.json`, SHA-256: `9e072cb5a35a7d55056410e734f099ceeaf09c0b7da206bca1e65ec63938e2fe`).
 
