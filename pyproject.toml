@@ -5,8 +5,47 @@ build-backend = "setuptools.backends.legacy:build"
 [project]
 name = "quadverdict"
 version = "0.1.0"
-description = "Cost-sensitive benchmark of four classifiers on the UCI credit-default dataset"
+description = "Publication-grade, cost-sensitive credit default benchmark of four machine learning paradigms with Nadeau-Bengio corrected statistical significance and interactive dashboard."
+readme = "README.md"
 requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+    { name = "Abdul Hayy Khan", email = "abdulhayykhan.dev@gmail.com" }
+]
+keywords = [
+    "machine-learning",
+    "credit-risk",
+    "credit-default",
+    "cost-sensitive-learning",
+    "benchmark",
+    "random-forest",
+    "decision-trees",
+    "support-vector-machines",
+    "logistic-regression",
+    "scikit-learn",
+    "nadeau-bengio",
+    "statistical-significance",
+    "explainable-ai",
+    "financial-ml"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[project.urls]
+Homepage = "https://quad-verdict.vercel.app/"
+Repository = "https://github.com/abdulhayykhan/QuadVerdict"
+Documentation = "https://github.com/abdulhayykhan/QuadVerdict/tree/main/docs"
+Issues = "https://github.com/abdulhayykhan/QuadVerdict/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]

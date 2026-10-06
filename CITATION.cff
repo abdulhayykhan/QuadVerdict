@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use this benchmark or software in your research or financial risk modeling, please cite it as below."
+title: "QuadVerdict: A Publication-Grade, Cost-Sensitive Credit Default Benchmark"
+version: 0.1.0
+date-released: 2026-10-06
+authors:
+  - family-names: Khan
+    given-names: Abdul Hayy
+    email: abdulhayykhan.dev@gmail.com
+    affiliation: "Dawood University of Engineering & Technology"
+repository-code: "https://github.com/abdulhayykhan/QuadVerdict"
+url: "https://quad-verdict.vercel.app/"
+license: MIT
+keywords:
+  - machine-learning
+  - credit-risk
+  - benchmark
+  - cost-sensitive-learning
+  - credit-default
+  - random-forest
+  - support-vector-machine
+  - decision-trees
+  - logistic-regression
+  - nadeau-bengio
+  - statistical-significance
+abstract: >
+  QuadVerdict is an open-source, publication-grade benchmark comparing Random
+  Forest, Decision Tree, Support Vector Machine, and Logistic Regression on the
+  UCI Credit Card Default dataset (N = 30,000) under asymmetric cost-sensitive
+  lending losses. Features a 15-fold nested cross-validation protocol, Nadeau-Bengio
+  corrected resampled t-tests, Holm-Bonferroni family-wise error control, zero-leakage
+  pipeline architecture, and a standalone interactive client dashboard.
