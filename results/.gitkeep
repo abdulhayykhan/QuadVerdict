@@ -1,6 +1,0 @@
-# results/ — canonical benchmark output directory.
-# Files produced by run_benchmark.py:
-#   results.json  ← do NOT gitignore
-#   schema.json   ← do NOT gitignore
-#   _cache/       ← gitignored (per-fold checkpoint pickles)
-#   figures/      ← PNGs for README, committed after Phase 10

@@ -1,3 +1,0 @@
-# notebooks/ — exploration only.
-# Source of truth for reported numbers is src/ + run_benchmark.py.
-# Strip outputs before commit: nbstripout --install
