@@ -6,6 +6,9 @@
   <meta name="description" content="QuadVerdict: Publication-grade, cost-sensitive benchmark of four machine learning classifiers on the UCI Credit Card default dataset with interactive threshold and loss optimization.">
   <title>QuadVerdict — Cost-Sensitive Credit Default Benchmark</title>
 
+  <!-- Site Favicon (Stylized QV Brand Mark) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23009E73'/%3E%3Cstop offset='100%25' stop-color='%2356B4E9'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='36' height='36' rx='9' fill='url(%23g)'/%3E%3Ctext x='18' y='25' font-family='system-ui,sans-serif' font-weight='800' font-size='17' fill='%23ffffff' text-anchor='middle'%3EQV%3C/text%3E%3C/svg%3E">
+
   <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,7 +24,7 @@
                          radial-gradient(ellipse at 85% 15%, rgba(88, 166, 255, 0.08) 0%, transparent 40%),
                          radial-gradient(ellipse at 50% 60%, rgba(213, 94, 0, 0.05) 0%, transparent 50%);
       --surface: #111827;
-      --surface-card: rgba(17, 24, 39, 0.82);
+      --surface-card: rgba(17, 24, 39, 0.88);
       --surface-subtle: #1a2234;
       --surface-hover: #222d42;
       --text: #f0f6fc;
@@ -63,7 +66,7 @@
       --bg-gradient: radial-gradient(ellipse at 15% 0%, rgba(0, 158, 115, 0.08) 0%, transparent 45%),
                          radial-gradient(ellipse at 85% 15%, rgba(88, 166, 255, 0.06) 0%, transparent 40%);
       --surface: #ffffff;
-      --surface-card: rgba(255, 255, 255, 0.92);
+      --surface-card: rgba(255, 255, 255, 0.94);
       --surface-subtle: #f1f5f9;
       --surface-hover: #e2e8f0;
       --text: #0f172a;
@@ -139,7 +142,7 @@
     }
 
     /* -------------------------------------------------------------------------
-       Sticky Glass Header & Nav
+       Sticky Glass Header & Nav (QV logo removed from header, set as favicon)
        ------------------------------------------------------------------------- */
     header {
       position: sticky;
@@ -165,22 +168,8 @@
     .header-title-group {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       flex-wrap: wrap;
-    }
-
-    .brand-mark {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #009E73 0%, #56B4E9 100%);
-      color: #ffffff;
-      font-weight: 800;
-      font-size: 19px;
-      box-shadow: 0 4px 12px rgba(0, 158, 115, 0.35);
     }
 
     .header-title-group h1 {
@@ -197,7 +186,7 @@
       font-weight: 700;
       letter-spacing: 0.3px;
       text-transform: uppercase;
-      padding: 3px 9px;
+      padding: 3px 10px;
       border-radius: 20px;
       background: var(--success-bg);
       border: 1px solid var(--success);
@@ -222,8 +211,8 @@
     .header-thesis {
       color: var(--text-muted);
       font-size: 13px;
-      margin-top: 2px;
-      max-width: 620px;
+      margin-top: 3px;
+      max-width: 640px;
       line-height: 1.45;
     }
 
@@ -237,9 +226,9 @@
     /* Quick jump pill links */
     .nav-pills {
       display: flex;
-      gap: 6px;
+      gap: 4px;
       background: var(--surface-subtle);
-      padding: 4px;
+      padding: 3px 5px;
       border-radius: 24px;
       border: 1px solid var(--border);
     }
@@ -750,7 +739,7 @@
     }
 
     /* -------------------------------------------------------------------------
-       SVG Charts & Visualizations
+       SVG Charts & Visualizations (Fixed Margins & Zero Label Overlap)
        ------------------------------------------------------------------------- */
     .chart-box {
       width: 100%;
@@ -777,7 +766,7 @@
 
     .axis-title {
       fill: var(--text-muted);
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 700;
       letter-spacing: 0.3px;
     }
@@ -785,10 +774,11 @@
     .chart-legend {
       display: flex;
       flex-wrap: wrap;
-      gap: 16px;
+      gap: 14px;
       margin-bottom: 14px;
       font-size: 12.5px;
       font-weight: 600;
+      align-items: center;
     }
 
     .legend-item {
@@ -797,7 +787,7 @@
       gap: 7px;
       cursor: pointer;
       user-select: none;
-      padding: 4px 8px;
+      padding: 4px 9px;
       border-radius: var(--radius-sm);
       border: 1px solid transparent;
       transition: all var(--transition);
@@ -865,6 +855,19 @@
       color: var(--accent);
       font-weight: 700;
       border: 1px solid var(--border);
+    }
+
+    /* Feature Importance Highlight Callout */
+    .importance-callout {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.45;
     }
 
     /* Toast Notification */
@@ -950,18 +953,17 @@
     <span>✓</span> <span id="toast-text">Scenario link copied to clipboard!</span>
   </div>
 
-  <!-- Sticky Glass Header -->
+  <!-- Sticky Glass Header (QV logo removed from header; site icon is set in <head>) -->
   <header>
     <div class="container header-row">
       <div class="header-title-group">
-        <span class="brand-mark">QV</span>
         <div>
           <h1>
             <span>QuadVerdict</span>
             <span class="header-badge" id="badge-version">15-Fold Validated</span>
           </h1>
           <p class="header-thesis">
-            Cost-sensitive credit default benchmark on UCI Taiwanese cardholders ($N = 30,000$).
+            Cost-sensitive credit default benchmark on UCI Taiwanese cardholders (N = 30,000).
             <em>Asymmetric losses dictate true optimal operating points.</em>
           </p>
         </div>
@@ -1025,7 +1027,7 @@
             <p class="panel-desc">Outer-fold Repeated Stratified K-Fold CV metrics (mean &plusmn; std across 15 folds). Click column headers to sort.</p>
           </div>
           <div style="font-size:12px; color:var(--text-muted);">
-            Evaluated on $N = 24,000$ Dev Set &middot; 20% Hold-out strictly sealed
+            Evaluated on N = 24,000 Dev Set &middot; 20% Hold-out strictly sealed
           </div>
         </div>
 
@@ -1041,7 +1043,7 @@
                 <th scope="col" class="sortable" data-col="bal_acc">Balanced Acc ⬍</th>
                 <th scope="col" class="sortable" data-col="brier">Brier Score ⬍</th>
                 <th scope="col" class="sortable" data-col="accuracy">Accuracy ⬍</th>
-                <th scope="col">Optimal $t^*$ (5:1)</th>
+                <th scope="col">Optimal t* (5:1)</th>
               </tr>
             </thead>
             <tbody id="leaderboard-tbody"></tbody>
@@ -1051,7 +1053,7 @@
         <div style="margin-top: 28px;">
           <h3 style="font-size:14.5px; font-weight:700; margin-bottom:6px;">4&times;4 Pairwise Significance Matrix (Nadeau-Bengio + Holm-Bonferroni)</h3>
           <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:14px;">
-            Green cells indicate statistically significant superiority at $p_{\text{adj}} &lt; 0.05$ after correcting for cross-validation resample dependencies ($J=15, n_{\text{test}}/n_{\text{train}}=0.25$).
+            Green cells indicate statistically significant superiority at p<sub>adj</sub> &lt; 0.05 after correcting for cross-validation resample dependencies (J = 15 outer folds).
           </p>
           <div class="table-container">
             <table class="sig-table" id="sig-table">
@@ -1087,7 +1089,7 @@
           <button class="preset-btn active" data-ratio="5" data-threshold="0.34">⚖️ Standard Lending (5:1)</button>
           <button class="preset-btn" data-ratio="2" data-threshold="0.45">🚀 FinTech Growth (2:1)</button>
           <button class="preset-btn" data-ratio="1" data-threshold="0.50">🎯 Diagnostic Parity (1:1)</button>
-          <button class="preset-btn" id="btn-snap-opt" style="border-color:var(--success); color:var(--success);">⭐ Snap to Optimal $t^*$</button>
+          <button class="preset-btn" id="btn-snap-opt" style="border-color:var(--success); color:var(--success);">⭐ Snap to Optimal t*</button>
         </div>
 
         <!-- Controls -->
@@ -1106,15 +1108,15 @@
 
           <div class="control-group">
             <div class="control-header">
-              <label for="threshold-slider">Decision Threshold ($t$)</label>
-              <span class="control-val" id="val-threshold">0.50</span>
+              <label for="threshold-slider">Decision Threshold (t)</label>
+              <span class="control-val" id="val-threshold">0.34</span>
             </div>
-            <input type="range" id="threshold-slider" min="0" max="1" step="0.01" value="0.50" aria-label="Decision probability threshold slider">
+            <input type="range" id="threshold-slider" min="0" max="1" step="0.01" value="0.34" aria-label="Decision probability threshold slider">
           </div>
 
           <div class="control-group">
             <div class="control-header">
-              <label for="cost-slider">Cost Penalty Ratio ($C_{\text{FN}} : C_{\text{FP}}$)</label>
+              <label for="cost-slider">Cost Penalty Ratio (C<sub>FN</sub> : C<sub>FP</sub>)</label>
               <span class="control-val" id="val-cost-ratio">5 : 1</span>
             </div>
             <input type="range" id="cost-slider" min="1" max="50" step="1" value="5" aria-label="Cost penalty ratio for false negatives versus false positives">
@@ -1124,10 +1126,10 @@
         <!-- Financial Impact ROI Banner -->
         <div class="financial-banner" id="financial-roi-banner">
           <div class="financial-banner-text">
-            <span>Portfolio Simulation ($N = 24,000$ accounts):</span>
-            <span id="roi-text">Operating at $t^* = 0.34$ saves <strong>$1,186,330</strong> in expected default loss compared to default $t=0.50$ rules.</span>
+            <span>Portfolio Simulation (N = 24,000 accounts):</span>
+            <span id="roi-text">Operating at t* = 0.34 saves <strong>$1,186,330</strong> in expected default loss compared to default t = 0.50 rules.</span>
           </div>
-          <div class="financial-banner-highlight" id="roi-pct">-8.3% Loss Reduction</div>
+          <div class="financial-banner-highlight" id="roi-pct">-8.3% Cost Reduction</div>
         </div>
 
         <!-- Live Confusion Matrix and Cost Curve -->
@@ -1165,7 +1167,7 @@
           <div>
             <div class="control-header" style="margin-bottom:8px;">
               <span style="font-size:12px; text-transform:uppercase; color:var(--text-muted); font-weight:700;">Interactive Cost Curve (Click to Scrub)</span>
-              <span style="font-size:12px; color:var(--success); font-weight:700;" id="optimal-threshold-readout">Optimal $t = 0.34$</span>
+              <span style="font-size:12px; color:var(--success); font-weight:700;" id="optimal-threshold-readout">Optimal t* = 0.34</span>
             </div>
             <div class="chart-box" id="cost-chart-container" style="height:250px;">
               <svg class="chart-svg" id="cost-svg" role="img" aria-label="Cost versus threshold chart"></svg>
@@ -1220,7 +1222,7 @@
           <div>
             <h4 style="font-size:13px; font-weight:700; margin-bottom:8px; display:flex; justify-content:space-between;">
               <span>ROC Curve (FPR vs TPR)</span>
-              <span style="font-size:11px; color:var(--text-muted);">Chance = 0.500</span>
+              <span style="font-size:11.5px; color:var(--text-muted); font-weight:500;">Chance = 0.500</span>
             </h4>
             <div class="chart-box" id="roc-chart-container">
               <svg class="chart-svg" id="roc-svg" role="img" aria-label="Receiver Operating Characteristic Curve"></svg>
@@ -1229,7 +1231,7 @@
           <div>
             <h4 style="font-size:13px; font-weight:700; margin-bottom:8px; display:flex; justify-content:space-between;">
               <span>Precision-Recall Curve (Recall vs Precision)</span>
-              <span style="font-size:11px; color:var(--text-muted);">Prevalence = 22.1%</span>
+              <span style="font-size:11.5px; color:var(--text-muted); font-weight:500;">Prevalence = 22.1%</span>
             </h4>
             <div class="chart-box" id="pr-chart-container">
               <svg class="chart-svg" id="pr-svg" role="img" aria-label="Precision-Recall Curve"></svg>
@@ -1275,6 +1277,12 @@
               <p class="panel-desc">PR-AUC performance comparison across None, Class-Weighted, and Pipeline SMOTE.</p>
             </div>
           </div>
+          <!-- Clear Legend for Panel 6 -->
+          <div class="chart-legend" style="margin-bottom:8px;">
+            <span class="legend-item"><span class="legend-line" style="background:var(--c-rf);"></span> Balanced Class Weights</span>
+            <span class="legend-item"><span class="legend-line" style="background:var(--text-muted);"></span> None (Vanilla)</span>
+            <span class="legend-item"><span class="legend-line" style="background:var(--c-dt);"></span> SMOTE Oversampling</span>
+          </div>
           <div class="chart-box" id="imb-chart-container" style="height:300px;">
             <svg class="chart-svg" id="imb-svg" role="img" aria-label="Imbalance Strategies Grouped Bar Chart"></svg>
           </div>
@@ -1295,6 +1303,11 @@
             <button class="tab-btn" data-model="lr">Logistic Regression</button>
           </div>
         </div>
+
+        <div class="importance-callout">
+          <strong>Key Finding:</strong> Repayment status in September 2005 (<code>PAY_1</code>) is the overwhelming primary driver across all four architectures (causing a <strong>+0.18 to +0.21 drop in PR-AUC</strong> when shuffled), followed by previous monthly payment records (<code>PAY_2</code>, <code>PAY_3</code>) and total credit limit (<code>LIMIT_BAL</code>).
+        </div>
+
         <div class="chart-box" id="importance-chart-container" style="height:380px;">
           <svg class="chart-svg" id="importance-svg" role="img" aria-label="Permutation Feature Importance Horizontal Bar Chart"></svg>
         </div>
@@ -1331,14 +1344,18 @@
             </div>
           </div>
           <div>
-            <div class="control-header" style="margin-bottom:10px;">
+            <div class="control-header" style="margin-bottom:10px; align-items:center;">
               <h4 style="font-size:13px; font-weight:700;">Empirical Learning Curves (PR-AUC)</h4>
-              <select id="lc-model-select" style="padding:4px 10px; font-size:12px;">
-                <option value="rf">Random Forest</option>
-                <option value="dt">Decision Tree</option>
-                <option value="svm">Support Vector Machine</option>
-                <option value="lr">Logistic Regression</option>
-              </select>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="legend-item" style="font-size:11px; padding:0;"><span class="legend-line" style="background:var(--accent); width:14px;"></span> Val</span>
+                <span class="legend-item" style="font-size:11px; padding:0;"><span class="legend-line" style="background:var(--accent); width:14px; border-top:2px dashed var(--accent);"></span> Train</span>
+                <select id="lc-model-select" style="padding:3px 8px; font-size:12px;">
+                  <option value="rf">Random Forest</option>
+                  <option value="dt">Decision Tree</option>
+                  <option value="svm">Support Vector Machine</option>
+                  <option value="lr">Logistic Regression</option>
+                </select>
+              </div>
             </div>
             <div class="chart-box" id="lc-chart-container" style="height:260px;">
               <svg class="chart-svg" id="lc-svg" role="img" aria-label="Sample Learning Curves Chart"></svg>
@@ -1363,11 +1380,11 @@
             </p>
             <h4 style="color:var(--accent); margin-bottom:4px; font-weight:700;">Nadeau-Bengio Significance Correction</h4>
             <p style="margin-bottom:12px;">
-              Standard paired <em>t</em>-tests severely underestimate variance in cross-validation due to overlapping training sets. We apply the Nadeau-Bengio corrected variance term $\sigma^2 \times (1/k + n_{\text{test}}/n_{\text{train}})$ followed by Holm-Bonferroni correction.
+              Standard paired <em>t</em>-tests severely underestimate variance in cross-validation due to overlapping training sets. We apply the Nadeau-Bengio corrected variance term &sigma;<sup>2</sup> &times; (1/<em>k</em> + <em>n<sub>test</sub>/n<sub>train</sub></em>) followed by Holm-Bonferroni correction.
             </p>
             <h4 style="color:var(--accent); margin-bottom:4px; font-weight:700;">SVM Computational Subsampling Disclosure</h4>
             <p>
-              Kernel RBF Support Vector Machines scale with $O(n^2)$ to $O(n^3)$. Per TRD §4.2, SVM is trained on a stratified subsample of at most 8,000 rows per fold inside training partitions, then calibrated with sigmoid Platt scaling.
+              Kernel RBF Support Vector Machines scale with O(n<sup>2</sup>) to O(n<sup>3</sup>). Per TRD §4.2, SVM is trained on a stratified subsample of at most 8,000 rows per fold inside training partitions, then calibrated with sigmoid Platt scaling.
             </p>
           </div>
           <div>
@@ -1543,7 +1560,6 @@
         renderFooter();
         parseHashState();
 
-        // Leaderboard header sorting
         setupLeaderboardSorting();
 
         window.addEventListener('resize', debounce(function() {
@@ -1631,7 +1647,7 @@
         const elSig = document.getElementById('finding-significance');
         if (elSig) {
           const sigCount = DATA.significance.filter(s => s.nadeau_bengio.p_adj < 0.05).length;
-          elSig.innerHTML = `<strong>${sigCount} of 6 pairwise tests</strong> reach significance. Random Forest strictly outperforms LR, DT, and SVM ($p_{\\text{adj}} = 0.0000$).`;
+          elSig.innerHTML = `<strong>${sigCount} of 6 pairwise tests</strong> reach significance. Random Forest strictly outperforms LR, DT, and SVM (p<sub>adj</sub> = 0.0000).`;
         }
 
         const elCost = document.getElementById('finding-cost');
@@ -1640,7 +1656,7 @@
           const row50 = DATA.models[winKey].thresholds[50];
           const cost50 = costAt(row50.tp, row50.fp, row50.tn, row50.fn, state.costRatio);
           const savedPct = (((cost50 - opt.minCost) / cost50) * 100).toFixed(1);
-          elCost.innerHTML = `Operating Random Forest at empirical $t^* = ${opt.t.toFixed(2)}$ reduces losses by <strong>-${savedPct}%</strong> compared to default $t=0.50$.`;
+          elCost.innerHTML = `Operating Random Forest at empirical t* = ${opt.t.toFixed(2)} reduces losses by <strong>-${savedPct}%</strong> compared to default t = 0.50.`;
         }
       }
 
@@ -1704,7 +1720,7 @@
             <td>${cs.bal_acc.mean.toFixed(4)} &plusmn; ${cs.bal_acc.std.toFixed(4)}</td>
             <td>${cs.brier.mean.toFixed(4)} &plusmn; ${cs.brier.std.toFixed(4)}</td>
             <td>${cs.accuracy.mean.toFixed(4)} &plusmn; ${cs.accuracy.std.toFixed(4)}</td>
-            <td><strong style="color:var(--accent);">$t^* = ${opt.t.toFixed(2)}$</strong></td>
+            <td><strong style="color:var(--accent);">t* = ${opt.t.toFixed(2)}</strong></td>
           `;
           tbody.appendChild(tr);
         });
@@ -1776,7 +1792,6 @@
           updateUrlHash();
         });
 
-        // Scenario Preset Buttons
         const presetBtns = document.querySelectorAll('.scenario-presets .preset-btn:not(#btn-snap-opt)');
         presetBtns.forEach(btn => {
           btn.addEventListener('click', function() {
@@ -1794,7 +1809,6 @@
           });
         });
 
-        // Snap to Optimal Button
         const btnSnap = document.getElementById('btn-snap-opt');
         if (btnSnap) {
           btnSnap.addEventListener('click', function() {
@@ -1803,11 +1817,10 @@
             tSlider.value = opt.t;
             updateLab();
             updateUrlHash();
-            showToast(`Snapped to empirical optimal threshold: t = ${opt.t.toFixed(2)}`);
+            showToast(`Snapped to empirical optimal threshold: t* = ${opt.t.toFixed(2)}`);
           });
         }
 
-        // Copy Share Scenario link
         const copyBtn = document.getElementById('copy-link-btn');
         if (copyBtn) {
           copyBtn.addEventListener('click', function() {
@@ -1860,18 +1873,15 @@
         document.getElementById('val-total-cost').textContent = `$${Math.round(totalCost).toLocaleString()}`;
         document.getElementById('val-cost-1k').textContent = `$${Math.round(costPer1k).toLocaleString()}`;
 
-        // Optimal threshold calculation
         const opt = findOptimalThreshold(state.model, state.costRatio);
         document.getElementById('optimal-threshold-readout').textContent =
           `Optimal t* = ${opt.t.toFixed(2)} (Min Cost: $${Math.round(opt.minCost).toLocaleString()})`;
 
-        // Best model readout
         const best = getBestModelAtRatio(state.costRatio);
         const bestLabel = DATA.models[best.modelKey].label;
         document.getElementById('best-model-pill').innerHTML =
           `Lowest Cost @ ${state.costRatio}:1 &rarr; <strong>${bestLabel}</strong>`;
 
-        // Financial ROI readout
         const row50 = m.thresholds[50];
         const cost50 = costAt(row50.tp, row50.fp, row50.tn, row50.fn, state.costRatio);
         const savings = cost50 - opt.minCost;
@@ -1881,11 +1891,11 @@
         const roiPct = document.getElementById('roi-pct');
         if (roiText && roiPct) {
           if (savings > 0) {
-            roiText.innerHTML = `Shifting ${m.label} from default $t=0.50$ to $t^*=${opt.t.toFixed(2)}$ reduces losses by <strong>$${Math.round(savings).toLocaleString()}</strong> per ${DATA.meta.n.toLocaleString()} accounts.`;
+            roiText.innerHTML = `Shifting ${m.label} from default t = 0.50 to t* = ${opt.t.toFixed(2)} reduces losses by <strong>$${Math.round(savings).toLocaleString()}</strong> per ${DATA.meta.n.toLocaleString()} accounts.`;
             roiPct.textContent = `-${savingsPct.toFixed(1)}% Cost Reduction`;
           } else {
-            roiText.innerHTML = `Operating at default $t=0.50$ is already near-optimal for this cost ratio.`;
-            roiPct.textContent = `Optimal At t=0.50`;
+            roiText.innerHTML = `Operating at default t = 0.50 is already near-optimal for this cost ratio.`;
+            roiPct.textContent = `Optimal At t = 0.50`;
           }
         }
 
@@ -1902,7 +1912,8 @@
         svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
         svg.innerHTML = '';
 
-        const pad = { top: 20, right: 25, bottom: 35, left: 60 };
+        // Spacious padding preventing any label collision
+        const pad = { top: 25, right: 30, bottom: 45, left: 80 };
         const innerW = width - pad.left - pad.right;
         const innerH = height - pad.top - pad.bottom;
 
@@ -1925,7 +1936,7 @@
         [0.25, 0.5, 0.75, 1.0].forEach(frac => {
           const y = yScale(frac * maxCost);
           gridHtml += `<line x1="${pad.left}" y1="${y}" x2="${width - pad.right}" y2="${y}" class="grid-line" />`;
-          gridHtml += `<text x="${pad.left - 8}" y="${y + 4}" text-anchor="end" class="axis">$${Math.round(frac * maxCost).toLocaleString()}</text>`;
+          gridHtml += `<text x="${pad.left - 10}" y="${y + 4}" text-anchor="end" class="axis">$${Math.round(frac * maxCost).toLocaleString()}</text>`;
         });
         [0.0, 0.2, 0.4, 0.6, 0.8, 1.0].forEach(t => {
           const x = xScale(t);
@@ -1950,20 +1961,23 @@
 
         svg.innerHTML = `
           ${gridHtml}
+          <!-- Axes -->
+          <line x1="${pad.left}" y1="${pad.top + innerH}" x2="${width - pad.right}" y2="${pad.top + innerH}" class="axis-line" />
+          <line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${pad.top + innerH}" class="axis-line" />
           <!-- Cost Curve Path -->
           <path d="${pathD}" fill="none" stroke="var(--accent)" stroke-width="2.8" />
-          <!-- Optimal Line & Star -->
+          <!-- Optimal Line & Marker -->
           <line x1="${optX}" y1="${pad.top}" x2="${optX}" y2="${pad.top + innerH}" stroke="var(--success)" stroke-width="2" stroke-dasharray="3 3" />
           <circle cx="${optX}" cy="${optY}" r="5.5" fill="var(--success)" />
+          <text x="${optX}" y="${pad.top - 6}" text-anchor="middle" fill="var(--success)" font-size="11" font-family="var(--font-mono)" font-weight="700">t* = ${opt.t.toFixed(2)}</text>
           <!-- Current Threshold Indicator -->
           <line x1="${curX}" y1="${pad.top}" x2="${curX}" y2="${pad.top + innerH}" stroke="var(--danger)" stroke-width="2" />
           <circle cx="${curX}" cy="${curY}" r="6.5" fill="var(--danger)" />
-          <!-- Axis Titles -->
-          <text x="${width / 2}" y="${height - 4}" text-anchor="middle" class="axis-title">Decision Threshold (t)</text>
-          <text x="14" y="${height / 2}" text-anchor="middle" transform="rotate(-90, 14, ${height/2})" class="axis-title">Expected Cost ($)</text>
+          <!-- Axis Titles (Zero overlap with tick labels) -->
+          <text x="${pad.left + innerW / 2}" y="${height - 6}" text-anchor="middle" class="axis-title">Decision Threshold (t)</text>
+          <text x="16" y="${pad.top + innerH / 2}" text-anchor="middle" transform="rotate(-90, 16, ${pad.top + innerH / 2})" class="axis-title">Expected Cost ($)</text>
         `;
 
-        // Interactive click on Cost SVG to scrub threshold
         svg.style.cursor = 'crosshair';
         svg.onclick = function(e) {
           const rect = svg.getBoundingClientRect();
@@ -2019,7 +2033,7 @@
         svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
         svg.innerHTML = '';
 
-        const pad = { top: 20, right: 20, bottom: 40, left: 45 };
+        const pad = { top: 25, right: 25, bottom: 45, left: 65 };
         const innerW = width - pad.left - pad.right;
         const innerH = height - pad.top - pad.bottom;
 
@@ -2029,14 +2043,16 @@
         let svgContent = `
           <line x1="${pad.left}" y1="${pad.top + innerH}" x2="${width - pad.right}" y2="${pad.top + innerH}" class="axis-line" />
           <line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${pad.top + innerH}" class="axis-line" />
-          <line x1="${pad.left}" y1="${pad.top + innerH}" x2="${width - pad.right}" y2="${pad.top}" stroke="var(--border)" stroke-dasharray="4 4" />
+          <line x1="${pad.left}" y1="${pad.top + innerH}" x2="${width - pad.right}" y2="${pad.top}" stroke="var(--border)" stroke-dasharray="4 4" stroke-width="1.5" />
         `;
 
         [0.0, 0.2, 0.4, 0.6, 0.8, 1.0].forEach(v => {
           const x = xScale(v);
           const y = yScale(v);
+          svgContent += `<line x1="${pad.left}" y1="${y}" x2="${width - pad.right}" y2="${y}" class="grid-line" />`;
+          svgContent += `<line x1="${x}" y1="${pad.top}" x2="${x}" y2="${pad.top + innerH}" class="grid-line" />`;
           svgContent += `<text x="${x}" y="${pad.top + innerH + 18}" text-anchor="middle" class="axis">${v.toFixed(1)}</text>`;
-          svgContent += `<text x="${pad.left - 6}" y="${y + 4}" text-anchor="end" class="axis">${v.toFixed(1)}</text>`;
+          svgContent += `<text x="${pad.left - 8}" y="${y + 4}" text-anchor="end" class="axis">${v.toFixed(1)}</text>`;
         });
 
         ['lr', 'svm', 'dt', 'rf'].forEach(k => {
@@ -2054,8 +2070,8 @@
         });
 
         svgContent += `
-          <text x="${width / 2}" y="${height - 6}" text-anchor="middle" class="axis-title">False Positive Rate (1 - Specificity)</text>
-          <text x="14" y="${height / 2}" text-anchor="middle" transform="rotate(-90, 14, ${height/2})" class="axis-title">True Positive Rate (Recall)</text>
+          <text x="${pad.left + innerW / 2}" y="${height - 6}" text-anchor="middle" class="axis-title">False Positive Rate (1 - Specificity)</text>
+          <text x="16" y="${pad.top + innerH / 2}" text-anchor="middle" transform="rotate(-90, 16, ${pad.top + innerH / 2})" class="axis-title">True Positive Rate (Recall)</text>
         `;
 
         svg.innerHTML = svgContent;
@@ -2071,7 +2087,7 @@
         svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
         svg.innerHTML = '';
 
-        const pad = { top: 20, right: 20, bottom: 40, left: 45 };
+        const pad = { top: 25, right: 25, bottom: 45, left: 65 };
         const innerW = width - pad.left - pad.right;
         const innerH = height - pad.top - pad.bottom;
 
@@ -2084,15 +2100,17 @@
         let svgContent = `
           <line x1="${pad.left}" y1="${pad.top + innerH}" x2="${width - pad.right}" y2="${pad.top + innerH}" class="axis-line" />
           <line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${pad.top + innerH}" class="axis-line" />
-          <line x1="${pad.left}" y1="${yBaseline}" x2="${width - pad.right}" y2="${yBaseline}" stroke="var(--border)" stroke-dasharray="4 4" />
-          <text x="${width - pad.right}" y="${yBaseline - 6}" text-anchor="end" fill="var(--text-muted)" font-size="10.5" font-family="var(--font-mono)">Chance Baseline (${(posRate*100).toFixed(1)}%)</text>
+          <line x1="${pad.left}" y1="${yBaseline}" x2="${width - pad.right}" y2="${yBaseline}" stroke="var(--border)" stroke-dasharray="4 4" stroke-width="1.5" />
+          <text x="${width - pad.right}" y="${yBaseline - 6}" text-anchor="end" fill="var(--text-muted)" font-size="11" font-family="var(--font-mono)">Prevalence Baseline (${(posRate*100).toFixed(1)}%)</text>
         `;
 
         [0.0, 0.2, 0.4, 0.6, 0.8, 1.0].forEach(v => {
           const x = xScale(v);
           const y = yScale(v);
+          svgContent += `<line x1="${pad.left}" y1="${y}" x2="${width - pad.right}" y2="${y}" class="grid-line" />`;
+          svgContent += `<line x1="${x}" y1="${pad.top}" x2="${x}" y2="${pad.top + innerH}" class="grid-line" />`;
           svgContent += `<text x="${x}" y="${pad.top + innerH + 18}" text-anchor="middle" class="axis">${v.toFixed(1)}</text>`;
-          svgContent += `<text x="${pad.left - 6}" y="${y + 4}" text-anchor="end" class="axis">${v.toFixed(1)}</text>`;
+          svgContent += `<text x="${pad.left - 8}" y="${y + 4}" text-anchor="end" class="axis">${v.toFixed(1)}</text>`;
         });
 
         ['lr', 'svm', 'dt', 'rf'].forEach(k => {
@@ -2110,8 +2128,8 @@
         });
 
         svgContent += `
-          <text x="${width / 2}" y="${height - 6}" text-anchor="middle" class="axis-title">Recall (Sensitivity)</text>
-          <text x="14" y="${height / 2}" text-anchor="middle" transform="rotate(-90, 14, ${height/2})" class="axis-title">Precision (Positive Predictive Value)</text>
+          <text x="${pad.left + innerW / 2}" y="${height - 6}" text-anchor="middle" class="axis-title">Recall (Sensitivity)</text>
+          <text x="16" y="${pad.top + innerH / 2}" text-anchor="middle" transform="rotate(-90, 16, ${pad.top + innerH / 2})" class="axis-title">Precision (Positive Predictive Value)</text>
         `;
 
         svg.innerHTML = svgContent;
@@ -2148,7 +2166,7 @@
         svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
         svg.innerHTML = '';
 
-        const pad = { top: 20, right: 30, bottom: 40, left: 55 };
+        const pad = { top: 25, right: 30, bottom: 45, left: 65 };
         const innerW = width - pad.left - pad.right;
         const innerH = height - pad.top - pad.bottom;
 
@@ -2159,12 +2177,15 @@
           <line x1="${pad.left}" y1="${pad.top + innerH}" x2="${width - pad.right}" y2="${pad.top + innerH}" class="axis-line" />
           <line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${pad.top + innerH}" class="axis-line" />
           <!-- Perfectly calibrated diagonal -->
-          <line x1="${pad.left}" y1="${pad.top + innerH}" x2="${pad.left + innerW}" y2="${pad.top}" stroke="var(--border)" stroke-dasharray="4 4" />
+          <line x1="${pad.left}" y1="${pad.top + innerH}" x2="${pad.left + innerW}" y2="${pad.top}" stroke="var(--border)" stroke-dasharray="4 4" stroke-width="1.5" />
+          <text x="${scale(0.72)}" y="${scaleY(0.72) - 8}" fill="var(--text-muted)" font-size="11" font-weight="600">Perfect Calibration (y = x)</text>
         `;
 
         [0.0, 0.2, 0.4, 0.6, 0.8, 1.0].forEach(v => {
           const x = scale(v);
           const y = scaleY(v);
+          svgContent += `<line x1="${pad.left}" y1="${y}" x2="${width - pad.right}" y2="${y}" class="grid-line" />`;
+          svgContent += `<line x1="${x}" y1="${pad.top}" x2="${x}" y2="${pad.top + innerH}" class="grid-line" />`;
           svgContent += `<text x="${x}" y="${pad.top + innerH + 18}" text-anchor="middle" class="axis">${v.toFixed(1)}</text>`;
           svgContent += `<text x="${pad.left - 8}" y="${y + 4}" text-anchor="end" class="axis">${v.toFixed(1)}</text>`;
         });
@@ -2190,8 +2211,8 @@
         });
 
         svgContent += `
-          <text x="${width / 2}" y="${height - 6}" text-anchor="middle" class="axis-title">Mean Predicted Probability</text>
-          <text x="14" y="${height / 2}" text-anchor="middle" transform="rotate(-90, 14, ${height/2})" class="axis-title">Empirical Fraction of Positives</text>
+          <text x="${pad.left + innerW / 2}" y="${height - 6}" text-anchor="middle" class="axis-title">Mean Predicted Probability</text>
+          <text x="16" y="${pad.top + innerH / 2}" text-anchor="middle" transform="rotate(-90, 16, ${pad.top + innerH / 2})" class="axis-title">Empirical Fraction of Positives</text>
         `;
 
         svg.innerHTML = svgContent;
@@ -2210,7 +2231,7 @@
         svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
         svg.innerHTML = '';
 
-        const pad = { top: 20, right: 20, bottom: 40, left: 45 };
+        const pad = { top: 25, right: 25, bottom: 45, left: 65 };
         const innerW = width - pad.left - pad.right;
         const innerH = height - pad.top - pad.bottom;
 
@@ -2229,7 +2250,7 @@
         [0.46, 0.48, 0.50, 0.52, 0.54, 0.56, 0.58].forEach(v => {
           const y = yScale(v);
           svgContent += `<line x1="${pad.left}" y1="${y}" x2="${width - pad.right}" y2="${y}" class="grid-line" />`;
-          svgContent += `<text x="${pad.left - 6}" y="${y + 4}" text-anchor="end" class="axis">${v.toFixed(2)}</text>`;
+          svgContent += `<text x="${pad.left - 8}" y="${y + 4}" text-anchor="end" class="axis">${v.toFixed(2)}</text>`;
         });
 
         models.forEach((k, idx) => {
@@ -2267,7 +2288,7 @@
         });
 
         svgContent += `
-          <text x="14" y="${height / 2}" text-anchor="middle" transform="rotate(-90, 14, ${height/2})" class="axis-title">PR-AUC</text>
+          <text x="16" y="${pad.top + innerH / 2}" text-anchor="middle" transform="rotate(-90, 16, ${pad.top + innerH / 2})" class="axis-title">PR-AUC</text>
         `;
 
         svg.innerHTML = svgContent;
@@ -2286,7 +2307,7 @@
         svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
         svg.innerHTML = '';
 
-        const pad = { top: 20, right: 20, bottom: 40, left: 45 };
+        const pad = { top: 25, right: 25, bottom: 45, left: 65 };
         const innerW = width - pad.left - pad.right;
         const innerH = height - pad.top - pad.bottom;
 
@@ -2306,7 +2327,7 @@
         [0.45, 0.50, 0.55, 0.60].forEach(v => {
           const y = yScale(v);
           svgContent += `<line x1="${pad.left}" y1="${y}" x2="${width - pad.right}" y2="${y}" class="grid-line" />`;
-          svgContent += `<text x="${pad.left - 6}" y="${y + 4}" text-anchor="end" class="axis">${v.toFixed(2)}</text>`;
+          svgContent += `<text x="${pad.left - 8}" y="${y + 4}" text-anchor="end" class="axis">${v.toFixed(2)}</text>`;
         });
 
         const grpW = innerW / models.length;
@@ -2336,14 +2357,14 @@
         });
 
         svgContent += `
-          <text x="14" y="${height / 2}" text-anchor="middle" transform="rotate(-90, 14, ${height/2})" class="axis-title">PR-AUC</text>
+          <text x="16" y="${pad.top + innerH / 2}" text-anchor="middle" transform="rotate(-90, 16, ${pad.top + innerH / 2})" class="axis-title">PR-AUC</text>
         `;
 
         svg.innerHTML = svgContent;
       }
 
       // -----------------------------------------------------------------------
-      // 10. Panel 7: Permutation Importance
+      // 10. Panel 7: Permutation Importance (Fixed readable layout & no overflow)
       // -----------------------------------------------------------------------
       function renderImportanceChart() {
         const svg = document.getElementById('importance-svg');
@@ -2368,13 +2389,14 @@
         const m = DATA.models[state.importanceModel];
         if (!m || !m.importance || !m.importance.permutation) return;
 
-        const feats = m.importance.permutation.slice(0, 12);
-        const pad = { top: 20, right: 40, bottom: 35, left: 110 };
+        const feats = m.importance.permutation.slice(0, 10);
+        // Generous right padding (110px) so labels like +0.2156 never clip
+        const pad = { top: 20, right: 110, bottom: 40, left: 115 };
         const innerW = width - pad.left - pad.right;
         const innerH = height - pad.top - pad.bottom;
 
-        const maxMean = Math.max(...feats.map(f => f.mean + f.std)) * 1.15;
-        const xScale = v => pad.left + (v / maxMean) * innerW;
+        const maxMean = 0.24;
+        const xScale = v => pad.left + (Math.max(0, v) / maxMean) * innerW;
         const rowH = innerH / feats.length;
 
         let svgContent = `
@@ -2382,30 +2404,42 @@
           <line x1="${pad.left}" y1="${pad.top + innerH}" x2="${width - pad.right}" y2="${pad.top + innerH}" class="axis-line" />
         `;
 
+        [0.05, 0.10, 0.15, 0.20].forEach(v => {
+          const x = xScale(v);
+          svgContent += `<line x1="${x}" y1="${pad.top}" x2="${x}" y2="${pad.top + innerH}" class="grid-line" />`;
+          svgContent += `<text x="${x}" y="${pad.top + innerH + 18}" text-anchor="middle" class="axis">+${v.toFixed(2)}</text>`;
+        });
+
         feats.forEach((f, idx) => {
           const cy = pad.top + idx * rowH + rowH / 2;
-          const barW = (f.mean / maxMean) * innerW;
+          const barW = Math.max(4, (f.mean / maxMean) * innerW);
           const errL = xScale(Math.max(0, f.mean - f.std));
           const errR = xScale(f.mean + f.std);
+          const isDominant = idx === 0;
+
+          // Alternating row background for clean scannability
+          if (idx % 2 === 0) {
+            svgContent += `<rect x="${pad.left}" y="${cy - rowH/2}" width="${innerW + 90}" height="${rowH}" fill="var(--surface-subtle)" opacity="0.3" />`;
+          }
 
           svgContent += `
-            <text x="${pad.left - 10}" y="${cy + 4}" text-anchor="end" font-size="12" font-family="var(--font-mono)" font-weight="600" fill="var(--text)">${f.feature}</text>
-            <rect x="${pad.left}" y="${cy - 7}" width="${barW}" height="14" fill="var(--c-${state.importanceModel})" rx="3" opacity="0.85" />
+            <text x="${pad.left - 10}" y="${cy + 4}" text-anchor="end" font-size="12" font-family="var(--font-mono)" font-weight="${isDominant ? '800' : '600'}" fill="${isDominant ? 'var(--accent)' : 'var(--text)'}">${f.feature}</text>
+            <rect x="${pad.left}" y="${cy - 7}" width="${barW}" height="14" fill="var(--c-${state.importanceModel})" rx="3" opacity="${isDominant ? '1.0' : '0.85'}" />
             <line x1="${errL}" y1="${cy}" x2="${errR}" y2="${cy}" stroke="var(--text)" stroke-width="1.5" />
             <line x1="${errR}" y1="${cy - 4}" x2="${errR}" y2="${cy + 4}" stroke="var(--text)" stroke-width="1.5" />
-            <text x="${errR + 8}" y="${cy + 4}" font-size="11" font-family="var(--font-mono)" fill="var(--text-muted)">+${f.mean.toFixed(4)}</text>
+            <text x="${errR + 8}" y="${cy + 4}" font-size="11.5" font-family="var(--font-mono)" font-weight="${isDominant ? '700' : '500'}" fill="${isDominant ? 'var(--success)' : 'var(--text-muted)'}">+${f.mean.toFixed(4)}${isDominant ? ' (Top Signal)' : ''}</text>
           `;
         });
 
         svgContent += `
-          <text x="${pad.left + innerW / 2}" y="${height - 6}" text-anchor="middle" class="axis-title">Mean Decrease in PR-AUC (ΔPR-AUC)</text>
+          <text x="${pad.left + innerW / 2}" y="${height - 6}" text-anchor="middle" class="axis-title">Mean Decrease in PR-AUC When Feature Permuted (ΔPR-AUC)</text>
         `;
 
         svg.innerHTML = svgContent;
       }
 
       // -----------------------------------------------------------------------
-      // 11. Panel 8: Efficiency & Learning Curves
+      // 11. Panel 8: Efficiency & Learning Curves (Fixed Legend & Clean Curves)
       // -----------------------------------------------------------------------
       function renderEfficiencyTable() {
         const tbody = document.getElementById('efficiency-tbody');
@@ -2448,7 +2482,7 @@
         const lc = DATA.learning_curves[state.lcModel];
         if (!lc || !lc.sizes) return;
 
-        const pad = { top: 20, right: 20, bottom: 40, left: 45 };
+        const pad = { top: 25, right: 25, bottom: 45, left: 65 };
         const innerW = width - pad.left - pad.right;
         const innerH = height - pad.top - pad.bottom;
 
@@ -2468,11 +2502,12 @@
         [0.45, 0.50, 0.55, 0.60, 0.65].forEach(v => {
           const y = yScale(v);
           svgContent += `<line x1="${pad.left}" y1="${y}" x2="${width - pad.right}" y2="${y}" class="grid-line" />`;
-          svgContent += `<text x="${pad.left - 6}" y="${y + 4}" text-anchor="end" class="axis">${v.toFixed(2)}</text>`;
+          svgContent += `<text x="${pad.left - 8}" y="${y + 4}" text-anchor="end" class="axis">${v.toFixed(2)}</text>`;
         });
 
         lc.sizes.forEach(s => {
           const x = xScale(s);
+          svgContent += `<line x1="${x}" y1="${pad.top}" x2="${x}" y2="${pad.top + innerH}" class="grid-line" />`;
           svgContent += `<text x="${x}" y="${pad.top + innerH + 18}" text-anchor="middle" class="axis">${Math.round(s/1000)}k</text>`;
         });
 
@@ -2489,9 +2524,8 @@
         svgContent += `
           <path d="${trainD}" fill="none" stroke="var(--c-${state.lcModel})" stroke-width="2" stroke-dasharray="4 3" />
           <path d="${valD}" fill="none" stroke="var(--c-${state.lcModel})" stroke-width="2.8" />
-          <text x="${pad.left + 10}" y="${pad.top + 10}" font-size="11" fill="var(--text-muted)">Validation PR-AUC (solid)</text>
-          <text x="${pad.left + 10}" y="${pad.top + 24}" font-size="11" fill="var(--text-muted)">Training PR-AUC (dashed)</text>
-          <text x="${width / 2}" y="${height - 6}" text-anchor="middle" class="axis-title">Training Set Size (Samples)</text>
+          <text x="${pad.left + innerW / 2}" y="${height - 6}" text-anchor="middle" class="axis-title">Training Set Size (Samples)</text>
+          <text x="16" y="${pad.top + innerH / 2}" text-anchor="middle" transform="rotate(-90, 16, ${pad.top + innerH / 2})" class="axis-title">PR-AUC</text>
         `;
 
         svg.innerHTML = svgContent;
